@@ -60,7 +60,31 @@
     background:rgba(255,255,255,.16);padding:5px 12px;border-radius:99px;font-weight:600;margin-bottom:12px}
   header h1{font-family:'Anuphan',sans-serif;font-weight:700;font-size:25px;margin:0 0 6px;line-height:1.25}
   header .sub{opacity:.9;font-size:14px;margin:0;max-width:560px}
-    /* lab toggle — checkbox card to expand Lab section */
+    /* package detail card */
+  .package-detail-block{}
+  .pkg-card{background:linear-gradient(135deg,#f8faff,#fff);border:1.5px solid var(--navy);border-radius:14px;padding:16px 18px;margin-top:8px}
+  .pkg-name{font-family:'Anuphan';font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+  .pkg-bestfit{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .pkg-section{margin:14px 0;padding-top:12px;border-top:1px solid var(--navy-soft)}
+  .pkg-section:first-of-type{border-top:none;padding-top:0}
+  .pkg-inherits{background:var(--navy-soft);color:var(--navy);padding:10px 14px;border-radius:8px;font-size:13.5px;margin-bottom:12px;border-left:3px solid var(--navy)}
+  .pkg-section h4{font-family:'Anuphan';font-size:14px;color:var(--navy);margin:0 0 8px;font-weight:600}
+  .pkg-section.pkg-personalized h4{color:#b07410}
+  .pkg-section.pkg-optional h4{color:var(--muted)}
+  .pkg-list{margin:0}
+  .pkg-list li{font-size:13.5px;padding:4px 0 4px 22px}
+  .pkg-optional-list{font-size:13px;color:var(--muted);background:#f5f6fa;padding:10px 14px;border-radius:8px;margin:0;line-height:1.7}
+  .pkg-cta{margin-top:16px;padding:14px 16px;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;border-radius:10px;text-align:center}
+  .pkg-cta-title{font-size:14.5px;font-weight:600;margin:0 0 10px}
+  .pkg-cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+  .pkg-btn{display:inline-block;padding:10px 18px;border-radius:99px;text-decoration:none;font-weight:600;font-size:14px;font-family:'IBM Plex Sans Thai'}
+  .pkg-btn-call{background:#fff;color:var(--navy)}
+  .pkg-btn-line{background:#06c755;color:#fff}
+  .pkg-cta-note{font-size:11.5px;opacity:.88;margin:6px 0 0}
+  @media print{.pkg-cta{background:#fff;color:var(--navy);border:1.5px solid var(--navy)} .pkg-btn-call,.pkg-btn-line{border:1px solid currentColor;background:#fff;color:var(--navy)}}
+  @media (max-width:600px){.pkg-card{padding:14px} .pkg-name{font-size:15.5px} .pkg-list li{font-size:13px}}
+
+  /* lab toggle — checkbox card to expand Lab section */
   .lab-toggle-card{background:#fff8e8;border-left:4px solid #d39a23;padding:14px 16px;margin-bottom:14px}
   .lab-toggle-label{display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin:0}
   .lab-toggle-label input{margin:4px 0 0 0;width:18px;height:18px;cursor:pointer;flex-shrink:0;accent-color:#0a2878}
@@ -652,6 +676,147 @@
     return {key:'≥70', name:'วัยสูงอายุ — สมอง หัวใจ และความเปราะบาง', base:2};
   }
   const TIERS=['แพ็กเกจตรวจคัดกรองพื้นฐาน (Stroke Screen Basic)','แพ็กเกจตรวจคัดกรองเพิ่มเติม (Stroke Screen Plus)','แพ็กเกจตรวจคัดกรองครอบคลุม (Stroke Screen Advanced)','แพ็กเกจตรวจคัดกรองเข้มข้น (Stroke Screen Executive)'];
+
+  // ===== Package details (อิงตาม BSR PDF + แสดง marker ละเอียดเหมือนใบสั่งตรวจ lab) =====
+  const PACKAGES = [
+    { // 0 - Basic
+      bestFit: 'อายุ 18-39 ความเสี่ยงต่ำ / ตรวจประจำปี',
+      inherits: null,
+      sections: [
+        { h: '🩺 ตรวจร่างกายและประวัติ', items: [
+          'ซักประวัติและประเมินปัจจัยเสี่ยงโรคหลอดเลือดสมอง',
+          'ตรวจร่างกายทั่วไปโดยอายุรแพทย์',
+          'วัดความดันโลหิต (3 ครั้ง average)',
+          'วัด BMI, รอบเอว, อัตราเต้นหัวใจ'
+        ]},
+        { h: '💉 Lab พื้นฐาน (CBC + การทำงานตับ)', items: [
+          'Complete Blood Count (CBC) — เม็ดเลือดแดง/ขาว/เกล็ดเลือด',
+          'ALT (SGPT)',
+          'AST (SGOT)',
+          'Electrolytes — Na, K, Cl'
+        ]},
+        { h: '🍬 ตรวจน้ำตาลในเลือด', items: [
+          'Fasting Plasma Glucose (FPG)',
+          'HbA1c (น้ำตาลสะสม 3 เดือน)'
+        ]},
+        { h: '🥩 ตรวจไขมันในเลือด (Lipid Profile)', items: [
+          'Total Cholesterol (TC) — คอเลสเตอรอลรวม',
+          'LDL-Cholesterol — ไขมันเลว',
+          'HDL-Cholesterol — ไขมันดี',
+          'Triglyceride (TG) — ไตรกลีเซอไรด์'
+        ]},
+        { h: '🫘 ตรวจการทำงานของไต', items: [
+          'Blood Urea Nitrogen (BUN)',
+          'Creatinine (Cr)',
+          'eGFR (อัตรากรองของไต)',
+          'Urinalysis (UA) + Urine ACR (โปรตีนรั่วในปัสสาวะ)'
+        ]},
+        { h: '❤️ ตรวจหัวใจ', items: [
+          'ECG 12-lead (คลื่นไฟฟ้าหัวใจ)'
+        ]},
+        { h: '📋 รายงานและคำปรึกษา', items: [
+          'พบอายุรแพทย์ 30 นาที (วางแผนป้องกัน)',
+          'รายงานสรุปผล + คำแนะนำการปรับพฤติกรรม'
+        ]}
+      ],
+      optionalAddOns: ['hs-CRP', 'ApoB', 'Lp(a)', 'Sleep test (ถ้าเสี่ยง OSA)']
+    },
+
+    { // 1 - Plus
+      bestFit: 'อายุ 40-59 หรือมีความเสี่ยงปานกลาง',
+      inherits: 'แพ็กเกจตรวจคัดกรองพื้นฐาน (Basic)',
+      sections: [
+        { h: '➕ Lab ความเสี่ยงหลอดเลือด (เพิ่มจาก Basic)', items: [
+          'hs-CRP (high-sensitivity C-reactive protein) — การอักเสบในเลือด',
+          'ApoB (Apolipoprotein B) — โปรตีนพาไขมัน',
+          'Lp(a) (Lipoprotein-a) — ไขมันชนิดพิเศษ',
+          'Homocysteine — กรดอะมิโนเสี่ยงหลอดเลือด'
+        ]},
+        { h: '🦋 ตรวจไทรอยด์', items: [
+          'TSH (Thyroid Stimulating Hormone)',
+          'Free T4'
+        ]},
+        { h: '🧮 ประเมินความเสี่ยงด้วย calculator มาตรฐาน', items: [
+          'ASCVD 10-year cardiovascular risk',
+          'PREVENT calculator (AHA 2023)',
+          'Framingham Stroke Risk Profile'
+        ]},
+        { h: '📋 ปรึกษาแพทย์เชิงลึก', items: [
+          'พบอายุรแพทย์ 45 นาที',
+          'แผนป้องกันส่วนตัว (Personalized prevention plan)'
+        ]}
+      ],
+      optionalAddOns: ['Carotid Ultrasound', 'Holter monitoring', 'Echocardiogram (พิจารณาตามความเสี่ยง)']
+    },
+
+    { // 2 - Advanced
+      bestFit: 'อายุ ≥60 หรือมีปัจจัยเสี่ยงหลายข้อ',
+      inherits: 'แพ็กเกจตรวจคัดกรองเพิ่มเติม (Plus)',
+      sections: [
+        { h: '➕ Lab เชิงลึก (เพิ่มจาก Plus)', items: [
+          'Vitamin B12',
+          'Folate',
+          'Vitamin D 25-OH',
+          'NT-proBNP — marker ภาวะหัวใจล้มเหลว',
+          'PT, PTT, INR — การแข็งตัวของเลือด'
+        ]},
+        { h: '🔍 Imaging — หลอดเลือดและหัวใจ', items: [
+          'Carotid Duplex Ultrasound (อัลตราซาวด์หลอดเลือดแดงคอ)',
+          'Echocardiogram (TTE — อัลตราซาวด์หัวใจ)',
+          'Holter monitoring 24–48 ชั่วโมง'
+        ]},
+        { h: '🧠 ประเมินสมองและการเคลื่อนไหว', items: [
+          'TMSE หรือ MoCA-Thai (ประเมินความจำ)',
+          'Gait & Balance assessment (การเดินและทรงตัว)',
+          'AF risk assessment (ประเมินภาวะหัวใจเต้นผิดจังหวะ)'
+        ]},
+        { h: '👥 ทีมเชี่ยวชาญ', items: [
+          'พบ Neurologist (แพทย์ระบบประสาท)',
+          'Pharmacist medication review (เภสัชกรทบทวนยาที่กิน)'
+        ]}
+      ],
+      optionalAddOns: ['MRI สมอง', 'MRA/CTA หลอดเลือดสมอง-คอ', 'Holter 3-7 วัน']
+    },
+
+    { // 3 - Executive
+      bestFit: 'ผู้บริหารความเสี่ยงสูง / ประวัติครอบครัวแรง / ผลตรวจเดิมผิดปกติ',
+      inherits: 'แพ็กเกจตรวจคัดกรองครอบคลุม (Advanced)',
+      sections: [
+        { h: '➕ Lab พิเศษ (เพิ่มจาก Advanced)', items: [
+          'APS panel — Lupus anticoagulant',
+          'APS panel — Anti-cardiolipin antibodies',
+          'APS panel — Anti-β2-Glycoprotein I',
+          'hs-Troponin (cardiac marker)',
+          'Coagulation extended (D-dimer, Fibrinogen)'
+        ]},
+        { h: '🔍 Imaging ระดับเข้มข้น', items: [
+          'MRI สมอง — DWI/FLAIR/SWI/T2 (ตรวจหาจุดสมองขาดเลือดเล็กๆ)',
+          '7-day Patch Monitor (แทน 24-hr Holter — ตรวจ AF ระยะยาว)'
+        ]},
+        { h: '🧠 ประเมินสมองครบทุกมิติ', items: [
+          'Comprehensive Cognitive Assessment',
+          'Neuropsychological testing'
+        ]},
+        { h: '👥 ทีมเชี่ยวชาญครบ + ติดตามผล', items: [
+          'พบ Neurologist (แพทย์ระบบประสาท)',
+          'พบ Cardiologist (หทัยวิทยาแพทย์)',
+          'พบนักโภชนาการ',
+          'Specialist case review (ทีมร่วมทบทวน)',
+          '3-month prevention follow-up (ติดตามผล 3 เดือน)'
+        ]}
+      ],
+      optionalAddOns: ['MRA/CTA head-neck', 'Cardiac CT (Calcium Score)', 'Nutrigenomic / Genetic counseling']
+    }
+  ];
+
+  // map ชื่อ imaging จาก assess() → ป้าย add-on ของ package
+  function mapImagingToAddOn(t) {
+    if (t.indexOf('อัลตราซาวด์หลอดเลือดแดงที่คอ') >= 0) return 'Carotid Duplex Ultrasound';
+    if (t.indexOf('MRI สมอง') >= 0 && t.indexOf('MRI/CT') < 0) return 'MRI สมอง';
+    if (t.indexOf('MRI/CT หลอดเลือดสมอง') >= 0) return 'MRA/CTA หลอดเลือดสมอง-คอ';
+    if (t.indexOf('ติดเครื่องตรวจจังหวะหัวใจ') >= 0) return 'Holter monitoring + Echocardiogram';
+    return t;
+  }
 
   const LABELS = {
     sex:    {male:'ชาย', female:'หญิง'},
@@ -1265,9 +1430,41 @@
           ${bioHTML}
         </div>
 
-        <div class="res-block">
-          <h3>คำแนะนำการตรวจภาพ / หัวใจ</h3>
-          <ul class="clean">${imagingHTML}</ul>
+        <div class="res-block package-detail-block">
+          <h3>📦 รายละเอียดชุดตรวจที่แนะนำ</h3>
+          <div class="pkg-card">
+            <div class="pkg-name">${TIERS[d.tierIdx]}</div>
+            <div class="pkg-bestfit"><b>เหมาะกับ:</b> ${PACKAGES[d.tierIdx].bestFit}</div>
+
+            ${PACKAGES[d.tierIdx].inherits?`<div class="pkg-inherits"><b>✓ รวมทุกอย่างใน${PACKAGES[d.tierIdx].inherits}</b> + รายการด้านล่าง</div>`:''}
+
+            ${PACKAGES[d.tierIdx].sections.map(sec=>`
+            <div class="pkg-section">
+              <h4>${sec.h}</h4>
+              <ul class="clean pkg-list">${sec.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+            </div>`).join('')}
+
+            ${d.imaging.length && !d.imaging[0].t.startsWith('ยังไม่')?`
+            <div class="pkg-section pkg-personalized">
+              <h4>➕ ตรวจเพิ่มเติมที่แนะนำสำหรับท่าน (Add-ons ตามผลประเมิน):</h4>
+              <ul class="clean pkg-list">${d.imaging.map(i=>`<li class="${i.strong?'warn':''}"><b>${mapImagingToAddOn(i.t)}</b><br><span class="muted-row">${i.why}</span></li>`).join('')}</ul>
+            </div>`:''}
+
+            ${PACKAGES[d.tierIdx].optionalAddOns.length?`
+            <div class="pkg-section pkg-optional">
+              <h4>💡 Optional add-ons (พิจารณาตามดุลยพินิจแพทย์):</h4>
+              <p class="pkg-optional-list">${PACKAGES[d.tierIdx].optionalAddOns.join(' · ')}</p>
+            </div>`:''}
+
+            <div class="pkg-cta">
+              <p class="pkg-cta-title">📞 สอบถามรายละเอียด ราคา และนัดตรวจ:</p>
+              <div class="pkg-cta-btns">
+                <a class="pkg-btn pkg-btn-call" href="tel:${CONFIG.PHONE_TEL}">📞 โทร ${CONFIG.PHONE}</a>
+                <a class="pkg-btn pkg-btn-line" href="${CONFIG.LINE_URL}" target="_blank" rel="noopener">💬 LINE @bangkoksurat</a>
+              </div>
+              <p class="pkg-cta-note">แจ้งรหัสอ้างอิง <b>${d.assessmentId}</b> เพื่อให้เจ้าหน้าที่ค้นหาข้อมูลของท่าน</p>
+            </div>
+          </div>
         </div>
 
         <div class="res-block">
