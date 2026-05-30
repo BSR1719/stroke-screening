@@ -681,11 +681,10 @@
   const PACKAGES = [
     { // 0 - Basic
       bestFit: 'อายุ 18-39 ความเสี่ยงต่ำ / ตรวจประจำปี',
-      inherits: null,
       sections: [
         { h: '🩺 ตรวจร่างกายและประวัติ', items: [
           'ซักประวัติและประเมินปัจจัยเสี่ยงโรคหลอดเลือดสมอง',
-          'ตรวจร่างกายทั่วไปโดยอายุรแพทย์',
+          'ตรวจร่างกายโดยอายุรแพทย์',
           'วัดความดันโลหิต (3 ครั้ง average)',
           'วัด BMI, รอบเอว, อัตราเต้นหัวใจ'
         ]},
@@ -714,9 +713,9 @@
         { h: '❤️ ตรวจหัวใจ', items: [
           'ECG 12-lead (คลื่นไฟฟ้าหัวใจ)'
         ]},
-        { h: '📋 รายงานและคำปรึกษา', items: [
-          'พบอายุรแพทย์ 30 นาที (วางแผนป้องกัน)',
-          'รายงานสรุปผล + คำแนะนำการปรับพฤติกรรม'
+        { h: '📋 รายงานและคำแนะนำ', items: [
+          'รายงานสรุปผลพร้อมคำอธิบาย',
+          'แผนปรับพฤติกรรมตาม Life’s Essential 8'
         ]}
       ],
       optionalAddOns: ['hs-CRP', 'ApoB', 'Lp(a)', 'Sleep test (ถ้าเสี่ยง OSA)']
@@ -724,9 +723,8 @@
 
     { // 1 - Plus
       bestFit: 'อายุ 40-59 หรือมีความเสี่ยงปานกลาง',
-      inherits: 'แพ็กเกจตรวจคัดกรองพื้นฐาน (Basic)',
       sections: [
-        { h: '➕ Lab ความเสี่ยงหลอดเลือด (เพิ่มจาก Basic)', items: [
+        { h: '💉 Lab ความเสี่ยงหลอดเลือด', items: [
           'hs-CRP (high-sensitivity C-reactive protein) — การอักเสบในเลือด',
           'ApoB (Apolipoprotein B) — โปรตีนพาไขมัน',
           'Lp(a) (Lipoprotein-a) — ไขมันชนิดพิเศษ',
@@ -741,9 +739,8 @@
           'PREVENT calculator (AHA 2023)',
           'Framingham Stroke Risk Profile'
         ]},
-        { h: '📋 ปรึกษาแพทย์เชิงลึก', items: [
-          'พบอายุรแพทย์ 45 นาที',
-          'แผนป้องกันส่วนตัว (Personalized prevention plan)'
+        { h: '📋 แผนป้องกันส่วนตัว', items: [
+          'Personalized prevention plan (แผนป้องกันที่ปรับตามผลตรวจของท่าน)'
         ]}
       ],
       optionalAddOns: ['Carotid Ultrasound', 'Holter monitoring', 'Echocardiogram (พิจารณาตามความเสี่ยง)']
@@ -751,9 +748,8 @@
 
     { // 2 - Advanced
       bestFit: 'อายุ ≥60 หรือมีปัจจัยเสี่ยงหลายข้อ',
-      inherits: 'แพ็กเกจตรวจคัดกรองเพิ่มเติม (Plus)',
       sections: [
-        { h: '➕ Lab เชิงลึก (เพิ่มจาก Plus)', items: [
+        { h: '💉 Lab เชิงลึก', items: [
           'Vitamin B12',
           'Folate',
           'Vitamin D 25-OH',
@@ -771,8 +767,8 @@
           'AF risk assessment (ประเมินภาวะหัวใจเต้นผิดจังหวะ)'
         ]},
         { h: '👥 ทีมเชี่ยวชาญ', items: [
-          'พบ Neurologist (แพทย์ระบบประสาท)',
-          'Pharmacist medication review (เภสัชกรทบทวนยาที่กิน)'
+          'พบแพทย์ระบบประสาท (Neurologist)',
+          'เภสัชกรทบทวนยาที่กิน (Pharmacist medication review)'
         ]}
       ],
       optionalAddOns: ['MRI สมอง', 'MRA/CTA หลอดเลือดสมอง-คอ', 'Holter 3-7 วัน']
@@ -780,9 +776,8 @@
 
     { // 3 - Executive
       bestFit: 'ผู้บริหารความเสี่ยงสูง / ประวัติครอบครัวแรง / ผลตรวจเดิมผิดปกติ',
-      inherits: 'แพ็กเกจตรวจคัดกรองครอบคลุม (Advanced)',
       sections: [
-        { h: '➕ Lab พิเศษ (เพิ่มจาก Advanced)', items: [
+        { h: '💉 Lab พิเศษ', items: [
           'APS panel — Lupus anticoagulant',
           'APS panel — Anti-cardiolipin antibodies',
           'APS panel — Anti-β2-Glycoprotein I',
@@ -798,16 +793,25 @@
           'Neuropsychological testing'
         ]},
         { h: '👥 ทีมเชี่ยวชาญครบ + ติดตามผล', items: [
-          'พบ Neurologist (แพทย์ระบบประสาท)',
-          'พบ Cardiologist (หทัยวิทยาแพทย์)',
+          'พบแพทย์ระบบประสาท (Neurologist)',
+          'พบหทัยวิทยาแพทย์ (Cardiologist)',
           'พบนักโภชนาการ',
           'Specialist case review (ทีมร่วมทบทวน)',
-          '3-month prevention follow-up (ติดตามผล 3 เดือน)'
+          'ติดตามผล 3 เดือน (3-month prevention follow-up)'
         ]}
       ],
       optionalAddOns: ['MRA/CTA head-neck', 'Cardiac CT (Calcium Score)', 'Nutrigenomic / Genetic counseling']
     }
   ];
+
+  // Walk up inheritance — combine sections from Basic up to current tier
+  function getAllPackageSections(tierIdx) {
+    let all = [];
+    for (let i = 0; i <= tierIdx; i++) {
+      all = all.concat(PACKAGES[i].sections);
+    }
+    return all;
+  }
 
   // map ชื่อ imaging จาก assess() → ป้าย add-on ของ package
   function mapImagingToAddOn(t) {
@@ -1436,9 +1440,7 @@
             <div class="pkg-name">${TIERS[d.tierIdx]}</div>
             <div class="pkg-bestfit"><b>เหมาะกับ:</b> ${PACKAGES[d.tierIdx].bestFit}</div>
 
-            ${PACKAGES[d.tierIdx].inherits?`<div class="pkg-inherits"><b>✓ รวมทุกอย่างใน${PACKAGES[d.tierIdx].inherits}</b> + รายการด้านล่าง</div>`:''}
-
-            ${PACKAGES[d.tierIdx].sections.map(sec=>`
+            ${getAllPackageSections(d.tierIdx).map(sec=>`
             <div class="pkg-section">
               <h4>${sec.h}</h4>
               <ul class="clean pkg-list">${sec.items.map(i=>`<li>${i}</li>`).join('')}</ul>
