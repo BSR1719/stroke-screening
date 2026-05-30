@@ -9,23 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#0e3a4f;
-    --teal:#11505f;
-    --teal-2:#1c7080;
-    --ink:#16313b;
-    --muted:#5d7780;
-    --line:#dde7ea;
-    --bg:#eef3f4;
+    /* BSR brand */
+    --navy:#0a2878;     /* BSR brand navy (logo) */
+    --teal:#1a3a8c;     /* navy-mid (was teal) — kept var name for minimal refactor */
+    --teal-2:#2a4ea0;   /* navy-light (was teal-2) */
+    --ink:#18254a;
+    --brand-red:#b01828;   /* BSR brand red (logo) */
+    --brand-red-2:#8a1220; /* darker red */
+    --muted:#5d6a85;
+    --line:#dde3ed;
+    --bg:#eff2f8;
     --card:#ffffff;
     --low:#2f8f6b;
     --low-bg:#e7f4ee;
     --mod:#c6871a;
     --mod-bg:#fbf2dd;
-    --high:#d8492e;
-    --high-bg:#fbe7e1;
-    --accent:#e2603f;
+    --high:#b01828;      /* high-risk aligned to BSR red */
+    --high-bg:#fbe5e7;
+    --accent:#b01828;
     --radius:16px;
-    --shadow:0 1px 2px rgba(14,58,79,.05),0 8px 28px rgba(14,58,79,.08);
+    --shadow:0 1px 2px rgba(10,40,120,.06),0 8px 28px rgba(10,40,120,.10);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -33,8 +36,8 @@
     font-family:'IBM Plex Sans Thai',sans-serif;
     color:var(--ink);
     background:
-      radial-gradient(1200px 600px at 80% -10%, rgba(28,112,128,.10), transparent 60%),
-      radial-gradient(900px 500px at -10% 10%, rgba(14,58,79,.07), transparent 55%),
+      radial-gradient(1200px 600px at 80% -10%, rgba(42,78,160,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(10,40,120,.07), transparent 55%),
       var(--bg);
     line-height:1.55;
     -webkit-font-smoothing:antialiased;
@@ -45,8 +48,8 @@
   header{
     background:linear-gradient(135deg,var(--navy),var(--teal-2));
     color:#fff;border-radius:0 0 26px 26px;
-    padding:26px 22px 30px;margin-bottom:20px;
-    box-shadow:0 14px 40px rgba(14,58,79,.22);
+    padding:26px 96px 30px 22px;margin-bottom:20px;
+    box-shadow:0 14px 40px rgba(10,40,120,.22);
     position:relative;overflow:hidden;
   }
   header::after{
@@ -109,8 +112,8 @@
   .btn-row{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
   button{font-family:inherit;cursor:pointer;border:none;font-weight:600;font-size:15px;border-radius:12px;transition:.15s}
   .btn-primary{flex:1;min-width:200px;background:linear-gradient(135deg,var(--teal),var(--teal-2));
-    color:#fff;padding:15px 20px;box-shadow:0 8px 20px rgba(17,80,95,.28)}
-  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(17,80,95,.34)}
+    color:#fff;padding:15px 20px;box-shadow:0 8px 20px rgba(10,40,120,.28)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(10,40,120,.34)}
   .btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--teal);padding:15px 20px}
   .btn-ghost:hover{border-color:var(--teal-2);background:#f4f8f9}
 
@@ -119,8 +122,8 @@
   .res-banner{border-radius:18px;padding:22px;color:#fff;margin-bottom:16px;box-shadow:var(--shadow)}
   .res-banner.low{background:linear-gradient(135deg,#247a5b,#2f8f6b)}
   .res-banner.mod{background:linear-gradient(135deg,#b07410,#d39a23)}
-  .res-banner.high{background:linear-gradient(135deg,#b53a23,#d8492e)}
-  .res-banner.emerg{background:linear-gradient(135deg,#8d1a0c,#c12a16)}
+  .res-banner.high{background:linear-gradient(135deg,#8a1220,#b01828)}
+  .res-banner.emerg{background:linear-gradient(135deg,#6a0a18,#8a1220)}
   .res-banner .lvl{font-family:'Anuphan';font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.92;margin:0 0 4px;font-weight:600}
   .res-banner .lvl-big{font-family:'Anuphan';font-size:27px;font-weight:700;margin:0 0 8px}
   .res-banner p{margin:0;font-size:14px;opacity:.96}
@@ -149,6 +152,7 @@
 
   @media(max-width:560px){
     .grid,.grid-3,.chips{grid-template-columns:1fr}
+    header{padding:22px 76px 26px 18px}
     header h1{font-size:22px}
   }
   /* contact / appointment CTA */
@@ -171,12 +175,82 @@
     padding:16px;margin-bottom:16px;text-align:center;font-size:14px;color:var(--muted);box-shadow:var(--shadow)}
   @media(max-width:560px){.cb-form{grid-template-columns:1fr}}
 
+  /* hide on screen / show on print */
+  .no-screen{display:none}
+
+  /* patient-summary block (visible both on screen and on print) */
+  .patient-summary h3{font-family:'Anuphan';font-size:15.5px;color:var(--navy);margin:0 0 12px;
+    display:flex;align-items:center;gap:8px}
+  .patient-summary h3::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--teal-2)}
+  .ps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 20px;font-size:14px;margin-bottom:12px}
+  .ps-grid > div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:5px 0}
+  .ps-grid .k{color:var(--muted);font-size:13px}
+  .ps-grid .v{font-weight:600;color:var(--navy);text-align:right}
+  .ps-sub{margin-top:10px}
+  .ps-sub h4{font-family:'Anuphan';font-size:13.5px;color:var(--navy);margin:10px 0 7px;font-weight:600}
+  .ps-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .ps-tag{background:var(--bg);border:1px solid var(--line);color:var(--ink);
+    border-radius:8px;padding:5px 11px;font-size:12.5px}
+  .ps-empty{color:var(--muted);font-size:13px;font-style:italic}
+  .ref-id{display:inline-block;background:rgba(255,255,255,.18);padding:4px 11px;border-radius:7px;
+    font-family:'Anuphan';font-size:12px;letter-spacing:.04em;margin-top:12px;color:#fff}
+  @media(max-width:560px){.ps-grid{grid-template-columns:1fr}}
+
+  /* BSR logo */
+  .brand-logo{display:block;background:#fff;border-radius:10px;padding:6px 9px;
+    box-shadow:0 2px 8px rgba(10,40,120,.18)}
+  .brand-logo img{display:block;height:44px;width:auto}
+  header .brand-logo{position:absolute;top:18px;right:18px}
+  @media(max-width:560px){
+    header .brand-logo img{height:38px}
+    header .brand-logo{top:14px;right:14px;padding:5px 7px}
+  }
+
+  /* print-only header / contact / footer blocks */
+  .print-header{border-bottom:2.5px solid var(--brand-red);padding-bottom:12px;margin-bottom:16px;
+    display:flex;justify-content:space-between;align-items:center;gap:18px}
+  .ph-logo img{display:block;height:54px;width:auto}
+  .ph-brand{flex:1}
+  .ph-brand .hosp{font-family:'Anuphan';font-size:17px;font-weight:700;color:var(--navy);margin:0}
+  .ph-brand .doctitle{font-family:'Anuphan';font-size:14px;color:var(--ink);margin:4px 0 0;line-height:1.4}
+  .ph-meta{font-size:11.5px;color:var(--muted);text-align:right;white-space:nowrap;line-height:1.6}
+  .ph-meta b{color:var(--navy);font-weight:600}
+  .print-contact{border:1px solid var(--line);border-radius:10px;padding:13px 16px;
+    margin-top:14px;margin-bottom:10px;background:#f4f8f9;font-size:13px;line-height:1.8}
+  .print-contact b{color:var(--navy);font-weight:600}
+  .print-footer{font-size:10.5px;color:var(--muted);text-align:center;line-height:1.6;
+    border-top:1px solid var(--line);padding-top:10px;margin-top:14px}
+
   @media print{
-    body{background:#fff}
-    .cb-form,.contact-soft{display:none!important}
-    header,form,.btn-row,.no-print{display:none!important}
-    #result{display:block!important}
-    .card{box-shadow:none;border:1px solid #ccc}
+    @page{margin:14mm 12mm}
+    *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+    html,body{background:#fff !important;font-size:11.5pt}
+    .wrap{max-width:none;padding:0;margin:0}
+    /* hide screen-only blocks */
+    header,form,.btn-row,.no-print,.contact-card,.contact-soft,.alert-acute,.lab-note{display:none !important}
+    /* reveal print-only blocks */
+    .no-screen{display:block !important}
+    /* result section visible */
+    #result{display:block !important}
+    /* tighter cards & banners */
+    .card{box-shadow:none;border:1px solid #d0d7da;padding:14px 16px;margin-bottom:10px;
+      break-inside:avoid;page-break-inside:avoid;border-radius:10px}
+    .res-banner{box-shadow:none;border-radius:10px;padding:16px 18px;margin-bottom:12px;
+      break-inside:avoid;page-break-inside:avoid}
+    .res-banner .lvl{font-size:11px}
+    .res-banner .lvl-big{font-size:22px;margin:0 0 6px}
+    .res-banner p{font-size:13px}
+    .pkg-pill{margin-top:8px;font-size:13px;padding:5px 12px}
+    .res-block{break-inside:avoid;page-break-inside:avoid;margin-bottom:11px}
+    .res-block h3{font-size:14px;margin-bottom:7px}
+    ul.clean li{font-size:12.5px;padding:6px 0 6px 22px}
+    ul.clean li::before{top:12px;width:6px;height:6px}
+    .pt-conc{font-size:12px;padding:11px 13px}
+    .ps-grid{font-size:13px;gap:5px 18px}
+    .ps-tag{font-size:11.5px;padding:4px 9px}
+    .patient-summary h3{font-size:14px;margin-bottom:8px}
+    .ref-id{background:rgba(255,255,255,.22);font-size:11.5px}
+    a{color:inherit;text-decoration:none}
   }
 </style>
 </head>
@@ -184,6 +258,7 @@
 <div class="wrap">
 
   <header>
+    <div class="brand-logo no-print"><img alt="BSR" id="brandLogo"></div>
     <span class="badge">Bangkok Hospital Surat · Preventive Health</span>
     <h1>แบบประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง</h1>
     <p class="sub">Intensive Stroke Screening — ประเมินความเสี่ยงตามอายุ ปัจจัยเสี่ยง และผลตรวจ เพื่อแนะนำชุดตรวจและแผนป้องกันที่เหมาะสม</p>
@@ -331,6 +406,8 @@
 </div>
 
 <script>
+  const BSR_LOGO_URI = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCADeAJADASIAAhEBAxEB/8QAHQAAAgICAwEAAAAAAAAAAAAAAAkGCAUHAgMEAf/EAFMQAAECBQEEBAYOBQkGBwAAAAECAwAEBQYRBwgSITETQVHSFiJVYZSVFBcYMjM3QlZXcXWBkbMVUnKSsQkjNTY4c3ShtCRDU2PB0SU5YoSi0+H/xAAbAQACAgMBAAAAAAAAAAAAAAAABAUGAQIDB//EADoRAAEDAgIGBwYFBAMAAAAAAAEAAgMEEQUhBhIxQVFxExUWU2GBoSIyUpHB4RQzsdLwB0LC0TRy8f/aAAwDAQACEQMRAD8AvjV6tT6FQpys1aZEtIybKn33lAkIQkZJwMngOyNce6P0V+fUr6M/3Iz2sPxBXj9jzP5ZhZ2T2wlVVLoXANCuejGjlPisL5JnOBabZW4eIKYn7o/RX59yvoz/AHIPdH6K/PuV9Gf7kLrye0wZPaYV6wk4D+eas3YGh7x/zH7UxT3R+ivz7lfRn+5B7o/RX59yvoz/AHIXXk9pgye0wdYScB/PNHYGh7x/zH7UxT3R+ivz7lfRn+5B7o/RX59yvoz/AHIXXk9pgye0wdYScB/PNHYGh7x/zH7UxT3R+ivz7lfRn+5B7o/RX59yvoz/AHIXXk9pgye0wdYScB/PNHYGh7x/zH7UxT3R+ivz7lfRn+5B7o/RX59yvoz/AHIXXk9pgye0wdYScB/PNHYGh7x/zH7UxUbR+ipOPDuU9Hf7kZika0aVV2YDFMv2iOOnglt2YDKj5gF4haWT2mA+MMKGR2GAYg/eAtX6A0ZHsSOB8j9AmytutvNJdaWlaFDKVJOQR5j1xzhZVj6q33p5OoctqvzDUsDlcg+S7LODsLZOB9acHzxdXRvX23tUmRS5ltNJuRtG8unrXlL4HNbKj74dZSfGHnHGHYKtkuWwqoYzopVYa0yj24xvG7mPrmFuCCCCGlV1CdYfiCvH7HmfyzCzYZlrD8QV4/Y8z+WYWbETiPvt5L1TQD/jTf8AYfoiCCCI9X5ET+Q0Q1aqdOZn5OwauuXeQFtrWlDZUk8jurUCM+cRDbKmmZ3WC1afuJdl3azKIdChkLBfRlP1Q1oAdkSEFDrtu/JUjSDSx2HyNjpmh3Em9vKxCW/7QWsf0fVX99nvwe0FrH9H1V/fZ78MhwOwQYHYI7dXs4lV7t9W92z1/wBpZVwaSalWtRHKxX7LqklINfCTKkpWhvzq3FHdHnPCIZDULqYZmbFrMu+2lxpyRfQtChkKBbVkGFWt/Ao/ZH8ITqqcQkWO1XDRjHpcWjkMrQC0jZfffjfguUEEEKq0IggggQiPRIT87S6pL1KmzTspOSziXmZhlW6ttYOQoHtjzwQLBAIsdiYtoVqs1qlpymamy23XJAiXqLKBgFWMpdSOpKwCfMQodUbSheGzjejtn690pC3imRq5/RkyknA8c/zaj9Tm79yjDDxyidpZulZc7QvEdKMJbh1aWxj2HZjw4jyPpZQnWH4grx+x5n8sws2GZaw/EFeP2PM/lmFmKUlKSpRCUgZJPVCWIe+1XDQA2ppr/EP0QSACSQAOsxhahUS8SywSG+RV+t/+Rwn6gZklprIaH/y+uPDHWmpNX237VLYlipkvFCfZ3nj9lKdM/jrs/wC2pP8APRDaxyhSmmfx12f9tyf56IbWOUSAXnGkPvs5FEEEEZVdWMuT+p1W/wAG9+WqFUN/Ao/ZH8Iavcn9Tqt/g3vy1Qqhv4FH7I/hEXiO1q9N/p9+XUc2/wCS5QQQRGr0VEEEECEQQQQIXfJzTklUpedZUUuS7qHkEdRSoKH+Yhrco+JmRZmAMBxCV4+sZ/6wqOTlnZ2oy8kykqcmHUMoA6ypQSP8zDXJRgS0gzLg5DaEoz9Qx/0iTw7+7yXmv9QdW9Px9r/FRfVOQnapopdVOpso9NzcxS5hplhlO8txZQQEpHWTC5Z7RvWeaVuJ0wudLQ5D2GePnPGGkQYHZD5iaXB52qoYfjc9DC6CMCzjcpVXtGayfRhc/oZ/7we0ZrJ9GFz+hn/vDVYI3su3aGb4B6pcekGz9qvNaz27N1WzqlRKdIT7M7MzlRbDSUobWF4SCcqUcYAA68nAEMcHKDAzygjKja2ufVuDni1kQQQQJJeWpyn6Qos3Ihe57IZW1v4zu7ySM/5wuWqaD6t0iqvU02NVpwMK3EzEm10zToHJSVA8iOPHj2wySDA7BC89O2a19ynsE0gnwnX6JocHWve+7lzS0PaZ1Z+jm4vRDB7TOrP0c3F6IYZfgdggwOwQv1eziVP9v6vum+v+0sCs6aahW9SXKpXLKrlPkm/hJl+VUEI/aI5DzmItDXKrLMTdDnJWZZQ6y6wttxtYyFpKSCCOsEQqRSQlZSOQJA+6FKqnENrHarZozpBJi7ZOkYGlttnjf/S+QQR6JCRnKpVJem06VempuZcDTLDKd5biycBIHWYUVoJAFyto7OVlu3jr3SlKaKpGkK/Sc0ojgNw/zaT9a937gYYeOAjVuhOlDWlmnSZWcDbldnyJiovI4gKx4rST1pQCR5yVHrjaUTtLD0bLHaV4jpRizcRrS6M+w3IePE+Z9LIggghlVxEEEECEQQQQIRBBBAhEEEECEQQQQIXRO/0c/wD3av4GFLrqEh0q/wDbGPfH5Y7YbRO/0bMf3Sv4GEwOfDL/AGj/ABiQocEjxPW13lurw8f/ABSWH6VTYDrdFGHa9tt8rcua23Yto1fUe7W7ctUyczOqTvq6WZQ0lCOtRycnHYkE+aL1aNaA2/pcyKrNOIq1yOI3Vz6kYQwDzQyk+9HUVHxj5hwhXbDz0rNNTUs84y+0oLbdaUULQocilQ4g+cRcnZ42uZxNRlLJ1Zn+nZeUGZO4XThSFHglEyeRB5B3mPlZ98GKjRX8I3pYTr247fJbV+ntVijegkAjaeG/mTn9OKu5BHwKCkgpIIPWI+xDqLXROzsnTqe9P1CbYlJVhBcdffWEIbSBkqUo8AB2mIx7aumH0jWn63l+/GN1zGdmu+wfIc3+UYUruIwPET+AibwvCm1rHOc61ikKusMDgAL3TfPbV0w+ka0/W8v34PbV0w+ka0/W8v34UHuI/UR+6INxH6iP3REp2Zj7w/JKdau+FONo162dcU4qUt+66JVZhCd9TMjPNPrSntKUqJx54zsKL0enZul7QFlzlOfXLPitSrfSNeKd1bqUKSe0FKiCOsGG6DlEJimHCieGh1wQn6Sp/ENJItZEEEERabREbqOoVhUepOU+rXtbshONHDkvNVJlpxB86VKBH3xkrhmHpS0qpNyyyh5mUdcbUPkqCCQfxEJqdednHlzc2svzD5LrrrnjKWtXEqJPEkkk5iXwrCxW6xc6wFklWVZp7WF7pvPtq6YfSNafreX78Htq6YfSNafreX78KD3EfqI/dEG4j9RH7oiY7Mx94fkkutXfCmu3nrrpTbNk1CrPX1QZ1TbK+jlJCebmHn17p3UIQgkkk4HYOZwIVKVFSiojBJyR2RxCUj3qQPqGI+xK4dhrKIO1Te6Tqap1QRcWsiDgRgjI7DBBEklUwLY11kmLvs5/Tu4ptT1XobSVybzqsrmJPISASeamyQnP6qkdhi00KY0OvF2xNoO1bgS6UMCeRKzWOSmHj0SwfqCt760iGzDlFDxykFPUazNjs/PerFh8xkjsdoUA1y/s1319hzf5RhS45D6obRrl/Zrvr7Dm/wAowpcch9US+jX5T+f0SWK++3kiCCCLKopSzS348rM+3JL89EN8HKFB6W/HlZn25Jfnohvg5RT9JfzWclNYV7ruaIIIIrKlliLq/qNWf8C/+WqE2N/Ao/ZH8IcndX9Rqz/gX/y1Qmxv4FH7I/hFt0Z92Ty+qhsV2t8/ouUEEEWlRCIIIIEIggggQuSFqbcS4g4UghQI6iDkQ5ymPLmKNKPuHK3GULV9ZSCYTva9FmLjvmjW/KoK3qjPMSiEjtW4lP8AAkw49ptDTCGm07qEAJSOwDgIqekzheMb8/opjCgfaPJQLXL+zXfX2HN/lGFLjkPqhtGuX9mu+vsOb/KMKXHIfVHfRr8p/P6LTFffbyRBBBFlUUs5ZlYl7e1Ht+vziVql6fUpabdSgZUUNupUrA7cAw2Omak6f1eksVKnXpQX5V9AcbcE80Mg9oKgQe0EAiFARxLbZOS2gk9ZSIisSwptaWuLrEJylrDACAL3TjPDizPnZQvWDPeg8OLM+dlC9YM96E59G1/wm/3RB0bX/Cb/AHREZ2Zb3np9011qfhTXtTNWNPra0rrdQnbrpLhMm62zLy82266+4pBCUIQkkkkkeYczwhUSAUtJSeYSAfwgCEJOUoSk9oAEfYlsNw1tC1wDr3SdVVGcgkWsiCCCJJKoggggQiCCJppjphdOrF9M21bEqSchc3OuJPQyTWeLjh/gnmo8B1kaSSNjaXvNgFs1pcdVu1bm2LdNHrn1hcvudlyaVbqT0S1DxXJxaSEgfsIKlHsJR2ww4DAxEU05sCg6Zac060LeaKZWUR47qwN+YdPFbqz1qUePm4AcAIlced4lWfi5zJu2DkrLSwdDGG71AtbmnX9nG+GWWluuLok0lKG0lSlHozwAHEmFS+D1wYH/AIDVvQne7Dl4+bo7T+MMYbixomloZe/iudVRicgk2sk0+D1f8g1b0J3uweD1f8g1b0J3uw5bdHafxg3R2n8Yku07u69fsleqR8fok0+D1f8AINW9Cd7sHg9X/INW9Cd7sOW3R2n8YN0dp/GDtO7uvX7I6pHx+iTT4PV/yDVvQne7B4PV/wAg1b0J3uw5bdHafxg3R2n8YO07u69fsjqkfH6JNPg9X/INW9Cd7sHg9X/INW9Cd7sOW3R2n8YN0dp/GDtO7uvX7I6pHx+iTT4PV/yDVvQne7B4PV/yDVvQne7Dlt0dp/GDdHafxg7Tu7r1+yOqR8fok1C3rgJwKBVj/wCyd7sZ2iaU6mXG+lqiWBck4T8tNPcQgfWtYCR+MN43R2n8YMCNXaTPI9mMfNZGFN3uVBdOdiC8axNMzuo9UYt+QyCqRklpmJtY7CoZbb+vKj5outY1gWlpzardv2hR2KdJp8Ze54y3l9a3FnitR7T92BElgiGrMRnq/wAw5cNyehpY4fdGaIIIIRTC8lUqUjRqJOVipzCZaSk2FzMw8vOG20JKlKOOOAATGqBtU6AkZ9seR9Fmf/riY6s/EJe32DPf6dcLh0jqmgEjbM+3rBb1xVOpKmAqUcpalhKGejSCFYcRx3t48j1RMYdQR1ETpHhxsdjbfVJVNS6J4a22fFMqs3UGytQaY5ULMuWn1lhpQS6ZVzKmieQWg4UnPVkCPZdV12/ZNpzdzXRU2qdSpQJL0y4CoJ3lBIGEgkkkgAAdcUS2P2Wpna1rM7ab78jbzclNFMpPTCTMOS6nE9ChQB8dSTgkjgMc+PGb7ad5ztwXVa+i1ub0xNzL7U3NstcSt1xXRy7ZA+tayP2TGX4WBWCnacrXPEDfdYbWEwGUjPZzVrLKvy09RLaNfs2stVSnh5Uup5tCkbricZSUqAIPEHlyIMYy9NXdONO6xJUq9LqlKPNzyC5LtvocO+kK3SolKSEjPWSIqXsp16q6VbSNx6K3S4lozrqm2xk7nstkEhSM/JcayR27qI823chx7V2z2Wk7y3KU4hKe0mYwB+JjZmFsNaKck6pFwfCywat3QdIBmMiFeeeq1OptAma3OzbbVPlpdU07M53kpaSkqUvhnI3QTwiP2LqZY2pVPm56yLhYq7Eo4lp9bTbiOjUpO8AQtIPERTvRvW+cY0avPRG/nHZaqSNFqEvSXJvKV5Qw4FSa8/LTg7meYBT1DPk2aLymtP8AZL1avCRAVOSCpdUtvDIDq2g2gkdYClpOPNGH4Q5jH394EAcCCdqG1oc5tthBv4WVur41w0s05qAp123jIyU+UhXsJsKffAPIqQ2FFP34jusbWbTLUiaVKWdd8jUJxCd9Umd5l8DrPRrAUQO0AiKW6C6OWnflh3VrLq/UalPUqRefU6208sOPqbQHHnnVJ8dR8YAJBGTnzCMrYTuyhRNoWh3PbVyXUNx5DchSJqQeU23NrUEIcLxG9uje96cjPEnAxHSTDIGh7Glxe3aQMr8OK1bVSEhxsAfHNXBrOr2nFv6jydhVi6ZaVuKcU0hiQW24VLLpw2N4JKRvHtMZG9dQ7L06orVWvW4JWjyjzvQtLf3lFxeM4SlIKjw4nA4dcUf2kq7K2tt+0m5J5t5yVpYpk682zgrUltRUQnPDJxgZjosqm1zbA2jZuq3nWGpCh0tsPGlMv4cblivCWGBz4kDpHfOO1IGG4Szo2TvcQzVuT48Ag1rtZ0bR7V7D7q8tC1Gsi5LBXe1IuOTdt5BWF1J4qYaTuHdUSXAnAB4ZiB+6p0F/S3sD2wZTe3t3pvYz/Q5/vNzdx58488Vv2q6jPVXV20tALSbapdClW5RpqRaG4yp99e42VAc0tpwQO1Sjzjbq9iTSc2MaUiYrSaz0WBWjNEq6XHviz7zdz8nHLrzxjn+DpYmNkncRr7ALZDiVuZ5nuLYwMtvPwVh2K7Rpu2xcMpU5WZpRZMyJ1hwONKbAJKgpOQRgHlEfsTVOwdTGZ52xrkl6wmRKBMlptxHR74JTnfSnnunl2RS3Zpumv2pcuoWj1VmS9JJpdRWhkKJQxNS4KHFI7ErTkkdqQeeY1dpRrZVdJ9MLspdttLTXa8ZVEvPEApk20IcC3ADzc8cBI5DiTyAPYYIXdI1huRa3Ag7yufWAGqSLA3v5Jh9Y110moN+eBdUvWRarvTtyxkkIcdUHVkBKCUJKQokjgTkZ44jYkVQ2S9CqVT7fktYLlnJetV2qIMzIFLvTok0rJ3llXHefUc7x5p4jnvGLXxF1sUUUnRxEm20+PgnIHve3WeLXUO1aIGgd7knA/QM9/p1wuDSK/wDRe07Zn5TUrTMXbPPTKXZaZS42Oha6NI3PGWPlAn74ZjfVXXb+l9x11qVYmlyFLmZtMvMDLbpQ0pW6sdaTjB80aQ2aL5kdarVrlSuLT+0Ke7TptuXbTT5BIStKm9/J388c9kSGHzmGmkLmktuLkGxS9TGHytANjY7rqsukLsjWdrZOo1jW1MWtZVELtTnv5xTrUjKol1BxKnOWVnOEAnnw4DMddkad3ptT6t3ffEpXGaNuTKZgzbyVr6MrJDTCNwggobQOOeGB2xZCsa7Vih7YstoVJWnbqbbmJpiUcc6JaXSl2X6RR3QdzmcYKeUe7WvaMtTQyZ8ErStuRnrjdQmYdlWUpl5eVCh4qnSgZUtQxhA44wSRwy+6qqHPAij9tzRqm97N8b8fFKiGINOu7IE33Zqr+rWiF97P03b+oDt1MVh39IJ6OeaQ4lUvMN4cbCytRyFBKgOPySOuM/tTXjTL8ujSm8Ka4gS1Uo6JhKSoeIozSQtH1pUFJ+6M6/tdaqyC5ZzUnSWlTFCmlhaGZinvyvSDnltb28gqA4jI/CLNU3UPSWu6BjVVmmyC7fpkq48WnJJsuyakHKmAjGEub2BgHBJBBwQYJaiogMcs8es4XFwRY33Zb0MjikDmxusNtitL7YGgZq8i/qzZ8kTUZZvNZlGE8ZhpIwJhIHNaAMK7UjPNPGJbKNnMaibNWqtlqmENCqOssNvZ3g250O8hRx1BaUn7o73dsXWW4H52q2fpZJv0CWWUr3pOZnC2nnh11shIVjmAOEbl0j1sl7x2ebuvek2DL29N0OXmHXGmkASc280wpzxFJCVHGAFAjKcgZMcpHVkFJ0Mg2EWNxcZ5AhbsEMk2u07ju2qsGnuqda2e27l0k1VsR+o0SorX7Jpy3OhWCtAQtTaj4rrTiQOII5Ag8xEep6KPqhtJ20rR7TF+h02Vm5VT0nLumYwEPha33V8Utjd4YzjxRzJifObWupd7SJS/o3adxsM43kqpUzOoaJGePFQTG7Nm/aJtzUGrvWM/Z1PtKtpbU+zL01ARLTQR78JTugoWkHO6c8AePAiG53zQNfP0PtWzs7LnZcWNZIWx6+W7LPldaR2kKNT7l/lBqNbdTcWJSpqpUm+GlhC+jcXuq3T1HBPGO/W7Tes7NWslK1X0yQqVt9x8BLJJU3KukYXLOEnJZcSDgnkcjmExt3SLXCp6obStx2rXbLtlsUZmbdlagwwpU1liYS2gFayepRPDHHlGra/tfawy8g63cWktBbkFOdGRU6dOJaUc5APSEJJ4Zx5o5QuqtZkIaLNaAQSMwVu8RWdJfMm4Ntll5ddpGc1NpltbTOljUxMNNMtM1RiXHSv0yal17yVqSOYSTukjqCVclcJArb3dNi9CmxEC5S1udN7NSZPpMe/3cb+M8dz7t6ONgbUmrVUuChUynaR0WWotRn2WnJim0ybQ0EOOpQtxKknc4Ak73EcOMbD2lNTbb0VmqG7bVi2jPXVUnVvqdnaegqaYRwK95GFbylkAHPyVRoWe0ymmi1iL6vtbuB5La+TpY3245fotdbN2lFzs2/e2sV6SsxLPVGkTrUgiaQUOvl1KnHpgpPFKSQAnPPKjyxmB7K2i9n6w2xfLVw9N7MlZWWlqfMsucJRx0LV0u6PfKBbSMHhgqHXkXV0R1NY1f0XkLqeYl2Z1ZXK1GVZyUNPoOFJG8Sd0gpUM54KEaq1A1wqel+1LQtLrYs+2mqVVlyAmZgMKaePTvFskbhCfFHLIMcW1tTJJNE1tnm2+1g1bGCJrWPJu39brUugmpVb2fNaZ/RnUtwStJmZvo0OOLw3KTC8bjyCf9y6N3J6iQeGFRffmIx05QKHUpxE3UKNT5uYQAEuvyyHFpAOQASCRx4xkYia2pbUvEgbZ2/xPFOwRGJure43KHas/EJe32DPf6dcLz0Lrm0LSbeqqNFqbMzci5MNmeU1JMTG670fijLvEeL2Qxy/aPO3FpXctApwbM5UKVMyjAdVup6RxpSU5PUMkcY07sqaQXjpJaFw0+8mZBt+fnGnmRKTHTjdS1unJwMcYdoauOClkDgCbjI71wqIXSTNtcCxzCqtZ85ftQ2/bWm9TZZyXuhdVlvZjbjKGVABghvxUeKPE3eXOJJp61IVb+U0qovdLTjwrNQVLtzXFJmEb3scYPWEJBSO0Jx1RuK4dBr/qO3pJaryrVM8G2p2VmFOKmsPBLcuG1Do93nvDtjv2g9lmZ1Dujw+sGpy9LuUhBmWJhSm25pSAAh1LiQS26AAM4wcDkRkyLq+B7g0kN1mWuP7TwSop5GgkC9nX5rbmuMjbk/s63g1dCWDT26W+7vvf7t1KCWlJJ5LC93HXnhFUtlC1HNQNnbVayarPLkaVUDLoRMn3rD/RKUpeDwwNxokdgjjM7Pe1ZqF7Ft+/7u3aK0sKK6hVvZLYxyV0bYy4odW9j6xFjPc80an7ME5o9bVen6SJxG9M1ZtILs08SCtTqetCsBJQCPEAAPanrxUkHQCUEucDcZhtjt5rvZ80nSFlgAdu9VZpdsbVez3KTSrSYdqFuqWZtS6YhupSbwIGXej+ERlIGSAOAHE842/ptruzq5s26k0meoMjRq3TKDOPvop6dyXmUOsO/wA6lPNKt4HeBJ4kHJzw19LaEbXNmU521bSvEOUIgtoEnWA00lB57qHU7zf1IjamkOzRVdN9Fb2kp+oSU7ddy0l6QAZUoS8sC0tKGwsjKsqXlSsdQwOGSzVy0749eRzS+4sW5E553XKBkrXarQQ2xuD9FV7QXaGmtEqFWZCWtNNbNUdae3zOKY6IoQU4wEKznPmjZ+zTaV66hbVE5rfWaCuj0rppmcK+hU008+8goDTIVxWAFEqVyyOeTG4dlbRa7NKbbuKUviUpnTz00w5LiWeExhKGyk5O6McTFisYGBHHEMTiEkrYGi7si697jkt6aleWtMhyG5UQ2Uf7cF9f4apf65uNt7cIxs1yfP8Ap6W6/wDlux4NCNCL/wBP9pu6b3uJmmJpFQZnUS6peb6RxRdmkOIyndGPFSc8Yn203prc+qejEvbdpNybk+3VGJspmn+hTuJSsHxsHj4w4RrNURGvjkDhqjVzWY4nimc0jPNd+zEpKNkSyVrWEpTIKJKjgAdK5xikt5ajWVqTtdzl26gLn3rMZcXKsMSTZcccl2kqQ0EjIwFLJcJz1xb+U071KoOwvL6a0FNORdwppp61Gb3Wm0uOq6Qpc3eJDa1Y4c4j+iGyha1u6cLb1UtWi1q4JiaW4Ssl9Es0AEobQrh1AqPDmrHVGaeoggfNUONySQLbbHf90TRSSBkYGwXN9nJaW2L9Q2LY1mqNgOzq3KTXwoyTjo3CZhrJQSPklbe8CO1KRGT2hv8AzFbKP/Mo/wDqlRMtYtletN6j27d2g9Lo1GckQlx6VMwZZDb7TgW26ngc5BKVD/0jtMdOvmgWsOoet1Pvu026VKusU2UT0gqPQrl5ltSlEoO7nxVEYV5oabUU0lSKhrgNZpBvuOzPmuJilbF0ZF7EW5K4YI7Y+xR+T0h20G6lLrf1FnC0l1Clg3ItQ3QoZyN3jwzwi745RX6qmbBbVeHX4KSilMl7tI5rrmX0y0o5MKQ6tLaSopaQVqOOoJHEnzCMJ4XSfki4PVT/AHYz6lJQgrWoJSkZJJwAIjtLv2zK1UHpGlXHT5qYZSpam23OO6n3xH6wHaMwsAupPiufhdJ+SLg9VP8Adg8LpPyRcHqp/ux3Kuy3E2wxcSqvLClvqSlqbz4iypW6AD5zwjw1HUSx6TV3aXUrmp8rOMqCHGXXN0oJAOD9xEZt4LF/Fejwuk/JFweqn+7B4XSfki4PVT/dj31Ou0aj0JVaqVRl5enpCVGZUrKMKwEkEc85GMR4Kxe9pUD2L+mK9JSfstvpmOkX8Ijh4w7RxEFvBF/FHhdJ+SLg9VP92Dwuk/JFweqn+7HroVyUG5pN2aoNTl59lpfRrWwchKsA4P3ERlYxsQM96j/hdJ+SLg9VP92Dwuk/JFweqn+7EgggyWbFR/wuk/JFweqn+7B4XSfki4PVT/diQQQZIsVH/C6T8kXB6qf7sHhdJ+SLg9VP92JBBBkixUf8LpPyRcHqp/uweF0n5IuD1U/3YkEEGSLFR/wuk/JFweqn+7Gbln0zMo3MJQ6hLiQoJdQUKGeopPEHzGO2CBAXhrLbD1uVBmZZmHmVyziHG5dO84tJSQQgDmojl540lYk3NpumQtqhzL1YphkX2VqqFH9izNKTuHdSp3ACsqwCMnMb7gjLXWFlq5tzdV0aqDk/o/Q9MWaZUxckvPstvyy5VaUtpQ+VqcK8bu7jrzHfccvdbdd1JmqPTJCZki+0maTMyinX9xTIBWx1HdGSR5osJiCN+k8Fr0V960bXJKarElaVjWvTVV+l02QbqE0Jt0yqJhO7uNJUsg4OSVbvPl2R0KNRc2a7ltqtU5YrNAaMkMt9IpTZKVNlCseMN3hkfqxvmCMdJ4LPR+Kx1Bl2Ze3ZJLTCGssNlQQgJydwc8dcZGCCOa6BEEEECEQQQQIRBBBAhEEEECEQQQQIX//Z';
+
   // ====== CONFIG : แก้ไขข้อมูลโรงพยาบาลตรงนี้ ======
   const CONFIG = {
     // วาง URL ของ Web App จาก Apps Script (Deploy > New deployment > Web app)
@@ -389,6 +466,41 @@
     return {key:'≥70', name:'Comprehensive Stroke, AF & Brain Frailty', base:2};
   }
   const TIERS=['Stroke Screen Basic','Stroke Screen Plus','Stroke Screen Advanced','Stroke Screen Executive / Intensive'];
+
+  const LABELS = {
+    sex:    {male:'ชาย', female:'หญิง'},
+    smoke:  {never:'ไม่สูบ', former:'เคยสูบ', current:'สูบอยู่'},
+    cond: {
+      htn:'ความดันโลหิตสูง', htn_unctrl:'ความดันคุมไม่ได้/สูงมาก',
+      dm:'เบาหวาน / ก่อนเบาหวาน', lipid:'ไขมันในเลือดสูง',
+      osa:'หยุดหายใจขณะหลับ / นอนกรน', af:'หัวใจเต้นผิดจังหวะ (AF)',
+      cadpad:'โรคหลอดเลือดหัวใจ / ขา', carotid:'หลอดเลือดคอตีบ',
+      ckd:'โรคไตเรื้อรัง', famhx:'ครอบครัวเป็น stroke/หัวใจก่อนวัย'
+    },
+    symp: {
+      acute:'อาการเฉียบพลัน (FAST)',
+      neuro:'ปวดหัวรุนแรง / อาการทางระบบประสาท',
+      cog:'ความจำถดถอย / การเดิน-ทรงตัวเปลี่ยน',
+      palp:'ใจสั่น / ชีพจรไม่สม่ำเสมอ',
+      bruit:'เสียงฟู่ที่หลอดเลือดคอ'
+    },
+    spec: {
+      women_preg:'ครรภ์เป็นพิษ / DM-HTN ขณะตั้งครรภ์',
+      women_meno:'หมดประจำเดือนก่อนวัย / ฮอร์โมนเอสโตรเจน',
+      women_migraine:'ไมเกรนแบบมีออร่า',
+      autoimmune:'SLE / APS / Autoimmune',
+      thrombosis:'ลิ่มเลือดอุดตัน / vascular event อายุน้อย',
+      cancer:'มะเร็งกำลังรักษา / อักเสบรุนแรง'
+    }
+  };
+  function labelize(arr, map){ return (arr||[]).map(v=>map[v]||v); }
+  function fmtDateTH(d){
+    const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    const yyyy=d.getFullYear()+543;
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    return `${d.getDate()} ${months[d.getMonth()]} ${yyyy} · ${hh}.${mm} น.`;
+  }
 
   function assess(){
     const age = num('age');
@@ -558,7 +670,10 @@
       });
     }
 
-    render({level,reasons,drivers,at,tierIdx,imaging,plan,followup,bio,addons,bmi,bmiCat,majorCount,consent});
+    render({level,reasons,drivers,at,tierIdx,imaging,plan,followup,bio,addons,bmi,bmiCat,majorCount,consent,
+      assessmentId, assessedAt: new Date(),
+      patient: { age, sex, weight:w, height:h, waist, smoke, cond, symp, spec, L }
+    });
   }
 
   // simplified CHA2DS2-VASc estimate
@@ -669,13 +784,96 @@
       `<li class="${i.strong?'warn':''}"><b>${i.t}</b><br><span class="muted-row">${i.why}</span></li>`).join('');
 
     const r=$('result');
+
+    // ---- patient input summary (shown on screen + print) ----
+    const p = d.patient || {};
+    const psRow = (k,v) => `<div><span class="k">${k}</span><span class="v">${v}</span></div>`;
+    const psItems = [];
+    psItems.push(psRow('อายุ', `${p.age} ปี`));
+    psItems.push(psRow('เพศ', LABELS.sex[p.sex] || '—'));
+    if(d.bmi!==null) psItems.push(psRow('BMI', `${d.bmi.toFixed(1)} (${d.bmiCat})`));
+    else if(p.weight||p.height) psItems.push(psRow('น้ำหนัก/ส่วนสูง', `${p.weight||'-'} กก. / ${p.height||'-'} ซม.`));
+    if(p.waist!==null && p.waist!==undefined) psItems.push(psRow('รอบเอว', `${p.waist} ซม.`));
+    psItems.push(psRow('การสูบบุหรี่', LABELS.smoke[p.smoke] || '—'));
+
+    const condLabels = labelize(p.cond, LABELS.cond);
+    const sympLabels = labelize((p.symp||[]).filter(s=>s!=='acute'), LABELS.symp);
+    const specLabels = labelize(p.spec, LABELS.spec);
+    const labRows = [];
+    const Lp = p.L || {};
+    if(Lp.sbp!==null || Lp.dbp!==null) labRows.push(`ความดัน ${Lp.sbp??'-'}/${Lp.dbp??'-'} mmHg`);
+    if(Lp.hba1c!==null) labRows.push(`HbA1c ${Lp.hba1c}%`);
+    if(Lp.fpg!==null) labRows.push(`FPG ${Lp.fpg} mg/dL`);
+    if(Lp.ldl!==null) labRows.push(`LDL ${Lp.ldl} mg/dL`);
+    if(Lp.hdl!==null) labRows.push(`HDL ${Lp.hdl} mg/dL`);
+    if(Lp.tg!==null) labRows.push(`TG ${Lp.tg} mg/dL`);
+    if(Lp.apob!==null) labRows.push(`ApoB ${Lp.apob} mg/dL`);
+    if(Lp.lpa!==null) labRows.push(`Lp(a) ${Lp.lpa} nmol/L`);
+    if(Lp.egfr!==null) labRows.push(`eGFR ${Lp.egfr}`);
+    if(Lp.acr!==null) labRows.push(`Urine ACR ${Lp.acr} mg/g`);
+    if(Lp.crp!==null) labRows.push(`hs-CRP ${Lp.crp} mg/L`);
+    if(Lp.hcy!==null) labRows.push(`Homocysteine ${Lp.hcy} µmol/L`);
+
+    const tagBlock = (title, arr) => `
+      <div class="ps-sub"><h4>${title}</h4>
+        ${arr.length
+          ? `<div class="ps-tags">${arr.map(x=>`<span class="ps-tag">${x}</span>`).join('')}</div>`
+          : `<div class="ps-empty">— ไม่ได้ระบุ —</div>`}
+      </div>`;
+
+    const patientSummaryHTML = `
+      <div class="card patient-summary">
+        <h3>ข้อมูลที่กรอก</h3>
+        <div class="ps-grid">${psItems.join('')}</div>
+        ${tagBlock('โรคประจำตัว / ปัจจัยเสี่ยง', condLabels)}
+        ${sympLabels.length ? tagBlock('อาการ / สัญญาณเตือน', sympLabels) : ''}
+        ${specLabels.length ? tagBlock('กลุ่มเฉพาะ', specLabels) : ''}
+        ${labRows.length ? `<div class="ps-sub"><h4>ผลตรวจที่กรอก</h4>
+          <div class="ps-tags">${labRows.map(x=>`<span class="ps-tag">${x}</span>`).join('')}</div></div>` : ''}
+      </div>`;
+
+    // ---- print-only header + footer ----
+    const dateStr = fmtDateTH(d.assessedAt || new Date());
+    const printHeaderHTML = `
+      <div class="print-header no-screen">
+        <div class="ph-logo"><img src="${BSR_LOGO_URI}" alt="Bangkok Hospital Surat"></div>
+        <div class="ph-brand">
+          <p class="hosp">${CONFIG.HOSPITAL_NAME}</p>
+          <p class="doctitle">ผลการประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง<br>
+            <span style="font-size:12px;color:var(--muted);font-weight:400">Intensive Stroke Screening — Self-Assessment Report</span></p>
+        </div>
+        <div class="ph-meta">
+          <div><b>วันที่ประเมิน</b><br>${dateStr}</div>
+          <div style="margin-top:6px"><b>รหัสอ้างอิง</b><br>${d.assessmentId}</div>
+        </div>
+      </div>`;
+
+    const printContactHTML = `
+      <div class="print-contact no-screen">
+        <b>ติดต่อ ${CONFIG.HOSPITAL_NAME}</b><br>
+        📞 โทร <b>${CONFIG.PHONE}</b> &nbsp;·&nbsp; 💬 LINE Official: <b>@bangkoksurat</b>
+        <br><span style="font-size:12px;color:var(--muted)">เมื่อติดต่อ กรุณาแจ้งรหัสอ้างอิง <b>${d.assessmentId}</b> เพื่อให้เจ้าหน้าที่ค้นหาข้อมูลการประเมินของท่านได้</span>
+      </div>`;
+
+    const printFooterHTML = `
+      <div class="print-footer no-screen">
+        <b>ข้อจำกัดของรายงาน:</b> เอกสารฉบับนี้เป็นผลการคัดกรองเบื้องต้นจากข้อมูลที่ท่านกรอกด้วยตนเอง <u>ไม่ใช่การวินิจฉัยทางการแพทย์</u> 
+        ควรพบแพทย์เพื่อยืนยันผลและวางแผนการดูแลที่เหมาะสม · อ้างอิงตาม AHA/ASA 2024 Guideline for the Primary Prevention of Stroke<br>
+        © ${(new Date()).getFullYear()} ${CONFIG.HOSPITAL_NAME} · รหัส ${d.assessmentId}
+      </div>`;
+
     r.innerHTML = `
+      ${printHeaderHTML}
+
       <div class="res-banner ${m.c}">
         <p class="lvl">${m.e}</p>
         <p class="lvl-big">${m.t}</p>
         <p>${d.reasons.join(' · ')}</p>
         <span class="pkg-pill">📦 แนะนำ: ${TIERS[d.tierIdx]}</span>
+        <div class="ref-id">รหัสอ้างอิง: ${d.assessmentId}</div>
       </div>
+
+      ${patientSummaryHTML}
 
       <div class="card">
         <div class="res-block">
@@ -724,6 +922,8 @@
       </div>
 
       ${contactHTML}
+      ${printContactHTML}
+      ${printFooterHTML}
 
       <div class="btn-row no-print">
         <button type="button" class="btn-primary" onclick="window.print()">🖨️ พิมพ์ / บันทึกเป็น PDF</button>
@@ -744,6 +944,9 @@
     });
     $('cbBox').innerHTML = '<div class="cb-done">✅ ได้รับข้อมูลแล้ว เจ้าหน้าที่ ' + CONFIG.HOSPITAL_NAME + ' จะติดต่อกลับโดยเร็ว ขอบคุณครับ</div>';
   }
+
+  // attach BSR logo (set src after DOM ready)
+  document.addEventListener("DOMContentLoaded",function(){var el=document.getElementById("brandLogo");if(el) el.src=BSR_LOGO_URI;});
 </script>
 </body>
 </html>
