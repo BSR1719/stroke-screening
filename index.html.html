@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง | Stroke Screening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0e3a4f;
+    --teal:#11505f;
+    --teal-2:#1c7080;
+    --ink:#16313b;
+    --muted:#5d7780;
+    --line:#dde7ea;
+    --bg:#eef3f4;
+    --card:#ffffff;
+    --low:#2f8f6b;
+    --low-bg:#e7f4ee;
+    --mod:#c6871a;
+    --mod-bg:#fbf2dd;
+    --high:#d8492e;
+    --high-bg:#fbe7e1;
+    --accent:#e2603f;
+    --radius:16px;
+    --shadow:0 1px 2px rgba(14,58,79,.05),0 8px 28px rgba(14,58,79,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'IBM Plex Sans Thai',sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(28,112,128,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(14,58,79,.07), transparent 55%),
+      var(--bg);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px 64px}
+
+  /* Header */
+  header{
+    background:linear-gradient(135deg,var(--navy),var(--teal-2));
+    color:#fff;border-radius:0 0 26px 26px;
+    padding:26px 22px 30px;margin-bottom:20px;
+    box-shadow:0 14px 40px rgba(14,58,79,.22);
+    position:relative;overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;
+    background:radial-gradient(circle,rgba(255,255,255,.10),transparent 70%);
+  }
+  .badge{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    background:rgba(255,255,255,.16);padding:5px 12px;border-radius:99px;font-weight:600;margin-bottom:12px}
+  header h1{font-family:'Anuphan',sans-serif;font-weight:700;font-size:25px;margin:0 0 6px;line-height:1.25}
+  header .sub{opacity:.9;font-size:14px;margin:0;max-width:560px}
+  .disclaimer{margin-top:16px;font-size:12.5px;background:rgba(255,255,255,.12);
+    border-left:3px solid rgba(255,255,255,.6);padding:9px 12px;border-radius:8px}
+
+  /* Cards / sections */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .sec-head{display:flex;align-items:center;gap:11px;margin:0 0 4px}
+  .sec-num{flex:0 0 30px;height:30px;border-radius:9px;background:var(--teal);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Anuphan';font-size:15px}
+  .sec-head h2{font-family:'Anuphan';font-size:17px;margin:0;font-weight:600;color:var(--navy)}
+  .sec-desc{font-size:13px;color:var(--muted);margin:2px 0 16px 41px}
+  .optional-tag{font-size:11px;font-weight:600;color:var(--teal-2);background:#e3f0f2;
+    padding:2px 9px;border-radius:99px;margin-left:6px}
+
+  label.fld{display:block;margin-bottom:14px}
+  label.fld > span{display:block;font-size:13.5px;font-weight:500;margin-bottom:6px;color:var(--ink)}
+  .hint{font-weight:400!important;color:var(--muted);font-size:12px!important}
+  input[type=number],input[type=text],select{
+    width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;
+    font-family:inherit;font-size:15px;color:var(--ink);background:#fbfdfd;transition:.15s;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--teal-2);background:#fff;
+    box-shadow:0 0 0 3px rgba(28,112,128,.12)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 12px}
+
+  /* segmented control */
+  .seg{display:flex;gap:8px;flex-wrap:wrap}
+  .seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg label{flex:1;min-width:90px;text-align:center;padding:10px 8px;border:1.5px solid var(--line);
+    border-radius:11px;font-size:14px;cursor:pointer;background:#fbfdfd;transition:.15s;user-select:none}
+  .seg input:checked + label{border-color:var(--teal-2);background:var(--teal);color:#fff;font-weight:600}
+
+  /* checkbox chips */
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .chip{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border:1.5px solid var(--line);
+    border-radius:11px;cursor:pointer;font-size:13.5px;background:#fbfdfd;transition:.15s;line-height:1.35}
+  .chip input{margin:2px 0 0;width:17px;height:17px;accent-color:var(--teal);flex:0 0 auto}
+  .chip:has(input:checked){border-color:var(--teal-2);background:#e9f3f4}
+  .chip small{display:block;color:var(--muted);font-size:11.5px}
+
+  .alert-acute{border:1.5px solid #f0b6a6;background:var(--high-bg);border-radius:12px;
+    padding:13px 14px;margin-top:12px;font-size:13.5px;display:none}
+  .alert-acute.show{display:block}
+  .alert-acute b{color:var(--high)}
+
+  .lab-note{font-size:12.5px;color:var(--muted);background:#f4f8f9;border:1px dashed var(--line);
+    padding:10px 12px;border-radius:11px;margin-bottom:16px}
+
+  .btn-row{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+  button{font-family:inherit;cursor:pointer;border:none;font-weight:600;font-size:15px;border-radius:12px;transition:.15s}
+  .btn-primary{flex:1;min-width:200px;background:linear-gradient(135deg,var(--teal),var(--teal-2));
+    color:#fff;padding:15px 20px;box-shadow:0 8px 20px rgba(17,80,95,.28)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(17,80,95,.34)}
+  .btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--teal);padding:15px 20px}
+  .btn-ghost:hover{border-color:var(--teal-2);background:#f4f8f9}
+
+  /* RESULT */
+  #result{display:none;scroll-margin-top:14px}
+  .res-banner{border-radius:18px;padding:22px;color:#fff;margin-bottom:16px;box-shadow:var(--shadow)}
+  .res-banner.low{background:linear-gradient(135deg,#247a5b,#2f8f6b)}
+  .res-banner.mod{background:linear-gradient(135deg,#b07410,#d39a23)}
+  .res-banner.high{background:linear-gradient(135deg,#b53a23,#d8492e)}
+  .res-banner.emerg{background:linear-gradient(135deg,#8d1a0c,#c12a16)}
+  .res-banner .lvl{font-family:'Anuphan';font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.92;margin:0 0 4px;font-weight:600}
+  .res-banner .lvl-big{font-family:'Anuphan';font-size:27px;font-weight:700;margin:0 0 8px}
+  .res-banner p{margin:0;font-size:14px;opacity:.96}
+  .pkg-pill{display:inline-block;background:rgba(255,255,255,.2);padding:7px 14px;border-radius:99px;
+    font-weight:600;margin-top:12px;font-size:14px}
+
+  .res-block{margin-bottom:16px}
+  .res-block h3{font-family:'Anuphan';font-size:15.5px;color:var(--navy);margin:0 0 10px;
+    display:flex;align-items:center;gap:8px}
+  .res-block h3::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--teal-2)}
+  ul.clean{list-style:none;margin:0;padding:0}
+  ul.clean li{padding:9px 0 9px 26px;border-bottom:1px solid var(--line);font-size:14px;position:relative}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--teal-2)}
+  ul.clean li.warn::before{background:var(--high)}
+  ul.clean li.ok::before{background:var(--low)}
+  ul.clean li b{color:var(--navy)}
+  .tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;margin-left:6px}
+  .tag.n{background:var(--low-bg);color:var(--low)}
+  .tag.a{background:var(--high-bg);color:var(--high)}
+  .tag.b{background:var(--mod-bg);color:var(--mod)}
+  .muted-row{color:var(--muted);font-size:13px}
+  .imaging-yes{color:var(--high);font-weight:600}
+  .footer-note{font-size:12px;color:var(--muted);text-align:center;margin-top:24px;line-height:1.6}
+  .pt-conc{background:var(--low-bg);border:1px solid #cfe7dc;border-radius:12px;padding:14px 16px;font-size:13.5px;color:#1f5e47}
+
+  @media(max-width:560px){
+    .grid,.grid-3,.chips{grid-template-columns:1fr}
+    header h1{font-size:22px}
+  }
+  /* contact / appointment CTA */
+  .consent-card label.chip{grid-column:1/-1}
+  .contact-card{background:linear-gradient(135deg,var(--navy),var(--teal-2));color:#fff;
+    border-radius:18px;padding:22px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .contact-card h3{font-family:'Anuphan';font-size:17px;margin:0 0 8px;color:#fff}
+  .contact-btns{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
+  .cbtn{flex:1;min-width:150px;text-align:center;text-decoration:none;padding:14px;border-radius:12px;
+    font-weight:600;font-size:15px;font-family:inherit;border:none;cursor:pointer;transition:.15s}
+  .cbtn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+  .cbtn.call{background:#fff;color:var(--teal)}
+  .cbtn.line{background:#06c755;color:#fff}
+  .cb-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+  .cb-form input,.cb-form select{background:rgba(255,255,255,.96);border:none;border-radius:10px;
+    padding:11px 12px;font-family:inherit;font-size:14px;color:var(--ink)}
+  .cb-form button{grid-column:1/-1}
+  .cb-done{background:rgba(255,255,255,.18);border-radius:11px;padding:13px 14px;font-size:14px;margin-top:12px}
+  .contact-soft{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;margin-bottom:16px;text-align:center;font-size:14px;color:var(--muted);box-shadow:var(--shadow)}
+  @media(max-width:560px){.cb-form{grid-template-columns:1fr}}
+
+  @media print{
+    body{background:#fff}
+    .cb-form,.contact-soft{display:none!important}
+    header,form,.btn-row,.no-print{display:none!important}
+    #result{display:block!important}
+    .card{box-shadow:none;border:1px solid #ccc}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="badge">Bangkok Hospital Surat · Preventive Health</span>
+    <h1>แบบประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง</h1>
+    <p class="sub">Intensive Stroke Screening — ประเมินความเสี่ยงตามอายุ ปัจจัยเสี่ยง และผลตรวจ เพื่อแนะนำชุดตรวจและแผนป้องกันที่เหมาะสม</p>
+    <div class="disclaimer">⚠️ แบบประเมินนี้ใช้เพื่อ <b>การป้องกันและจัดระดับความเสี่ยง</b> เท่านั้น ไม่ใช่การวินิจฉัยโรคหลอดเลือดสมองเฉียบพลัน หากมีอาการเฉียบพลันให้ไปห้องฉุกเฉินทันที</div>
+  </header>
+
+  <form id="form">
+
+    <!-- 1. Personal -->
+    <div class="card">
+      <div class="sec-head"><div class="sec-num">1</div><h2>ข้อมูลส่วนตัว</h2></div>
+      <p class="sec-desc">กรอกอย่างน้อย “อายุ” ก็ประเมินได้ ข้อมูลอื่นช่วยให้ผลแม่นยำขึ้น</p>
+
+      <div class="grid">
+        <label class="fld"><span>อายุ (ปี) <b style="color:var(--high)">*</b></span>
+          <input type="number" id="age" min="0" max="120" placeholder="เช่น 55"></label>
+        <label class="fld"><span>เพศ</span>
+          <select id="sex">
+            <option value="">— เลือก —</option>
+            <option value="male">ชาย</option>
+            <option value="female">หญิง</option>
+          </select></label>
+      </div>
+
+      <div class="grid-3">
+        <label class="fld"><span>น้ำหนัก (กก.)</span>
+          <input type="number" id="weight" min="0" step="0.1" placeholder="กก."></label>
+        <label class="fld"><span>ส่วนสูง (ซม.)</span>
+          <input type="number" id="height" min="0" step="0.1" placeholder="ซม."></label>
+        <label class="fld"><span>รอบเอว (ซม.) <span class="hint">มีก็กรอก</span></span>
+          <input type="number" id="waist" min="0" step="0.1" placeholder="ซม."></label>
+      </div>
+
+      <label class="fld"><span>การสูบบุหรี่ / บุหรี่ไฟฟ้า</span>
+        <div class="seg">
+          <input type="radio" name="smoke" id="sm0" value="never" checked><label for="sm0">ไม่สูบ</label>
+          <input type="radio" name="smoke" id="sm1" value="former"><label for="sm1">เคยสูบ</label>
+          <input type="radio" name="smoke" id="sm2" value="current"><label for="sm2">สูบอยู่</label>
+        </div>
+      </label>
+    </div>
+
+    <!-- 2. Conditions -->
+    <div class="card">
+      <div class="sec-head"><div class="sec-num">2</div><h2>โรคประจำตัว / ปัจจัยเสี่ยง<span class="optional-tag">ติ๊กเท่าที่มี</span></h2></div>
+      <p class="sec-desc">เลือกข้อที่แพทย์เคยวินิจฉัยหรือที่ทราบว่ามี</p>
+      <div class="chips" id="cond">
+        <label class="chip"><input type="checkbox" value="htn"><span>ความดันโลหิตสูง<small>Hypertension</small></span></label>
+        <label class="chip"><input type="checkbox" value="htn_unctrl"><span>ความดันคุมไม่ได้ / สูงมาก<small>Uncontrolled HTN</small></span></label>
+        <label class="chip"><input type="checkbox" value="dm"><span>เบาหวาน / ก่อนเบาหวาน<small>Diabetes / Prediabetes</small></span></label>
+        <label class="chip"><input type="checkbox" value="lipid"><span>ไขมันในเลือดสูง<small>Dyslipidemia</small></span></label>
+        <label class="chip"><input type="checkbox" value="osa"><span>หยุดหายใจขณะหลับ / นอนกรนรุนแรง<small>Sleep apnea (OSA)</small></span></label>
+        <label class="chip"><input type="checkbox" value="af"><span>หัวใจเต้นผิดจังหวะ AF<small>Atrial fibrillation</small></span></label>
+        <label class="chip"><input type="checkbox" value="cadpad"><span>โรคหลอดเลือดหัวใจ / ขา<small>CAD / PAD</small></span></label>
+        <label class="chip"><input type="checkbox" value="carotid"><span>เคยตรวจพบคราบ/ตีบหลอดเลือดคอ<small>Carotid disease</small></span></label>
+        <label class="chip"><input type="checkbox" value="ckd"><span>โรคไตเรื้อรัง<small>CKD</small></span></label>
+        <label class="chip"><input type="checkbox" value="famhx"><span>ครอบครัวเป็น stroke/หัวใจก่อนวัย<small>Early family history</small></span></label>
+      </div>
+    </div>
+
+    <!-- 3. Symptoms -->
+    <div class="card">
+      <div class="sec-head"><div class="sec-num">3</div><h2>อาการ / สัญญาณเตือน</h2></div>
+      <p class="sec-desc">ตรวจสอบอาการเฉียบพลันก่อน เพื่อแยกผู้ที่ต้องไปห้องฉุกเฉิน</p>
+      <div class="chips" id="symp">
+        <label class="chip" style="grid-column:1/-1;border-color:#f0b6a6;background:#fdf3f0">
+          <input type="checkbox" value="acute" id="acute"><span style="color:var(--high)"><b>อาการเฉียบพลัน (FAST)</b> — หน้าเบี้ยว แขนขาอ่อนแรงข้างเดียว พูดไม่ชัด ตามัวเฉียบพลัน<small>ภายใน 24 ชม. → ห้องฉุกเฉินทันที</small></span></label>
+        <label class="chip"><input type="checkbox" value="neuro"><span>ปวดหัวรุนแรงผิดปกติ / ชัก / อาการทางระบบประสาท<small>Non-acute neurologic</small></span></label>
+        <label class="chip"><input type="checkbox" value="cog"><span>ความจำถดถอย / การเดิน-ทรงตัวเปลี่ยน<small>Cognitive / gait change</small></span></label>
+        <label class="chip"><input type="checkbox" value="palp"><span>ใจสั่น / ชีพจรเต้นไม่สม่ำเสมอ<small>Palpitations / irregular pulse</small></span></label>
+        <label class="chip"><input type="checkbox" value="bruit"><span>ตรวจพบเสียงฟู่ที่หลอดเลือดคอ<small>Carotid bruit</small></span></label>
+      </div>
+      <div class="alert-acute" id="acuteAlert">
+        <b>⛔ มีอาการเฉียบพลัน</b> — นี่อาจเป็นภาวะหลอดเลือดสมองเฉียบพลัน โปรดไปห้องฉุกเฉิน/โทร 1669 ทันที แบบประเมินป้องกันนี้ไม่เหมาะกับกรณีฉุกเฉิน
+      </div>
+    </div>
+
+    <!-- 4. Special modules -->
+    <div class="card">
+      <div class="sec-head"><div class="sec-num">4</div><h2>กลุ่มเฉพาะ<span class="optional-tag">ถ้ามี</span></h2></div>
+      <p class="sec-desc">ปัจจัยเสี่ยงเฉพาะกลุ่ม สำหรับเลือกชุดตรวจเสริม (add-on modules)</p>
+      <div class="chips" id="special">
+        <label class="chip"><input type="checkbox" value="women_preg"><span>ประวัติครรภ์เป็นพิษ / เบาหวาน-ความดันขณะตั้งครรภ์<small>หญิง</small></span></label>
+        <label class="chip"><input type="checkbox" value="women_meno"><span>หมดประจำเดือนก่อนวัย / ใช้ฮอร์โมนเอสโตรเจน<small>หญิง</small></span></label>
+        <label class="chip"><input type="checkbox" value="women_migraine"><span>ไมเกรนแบบมีออร่า<small>Migraine with aura</small></span></label>
+        <label class="chip"><input type="checkbox" value="autoimmune"><span>SLE / APS / รูมาตอยด์ / โรคภูมิต้านตนเอง<small>Autoimmune</small></span></label>
+        <label class="chip"><input type="checkbox" value="thrombosis"><span>เคยมีลิ่มเลือดอุดตัน / หลอดเลือดผิดปกติตั้งแต่อายุน้อย<small>Thrombosis / young vascular event</small></span></label>
+        <label class="chip"><input type="checkbox" value="cancer"><span>มะเร็งที่กำลังรักษา / การอักเสบรุนแรง<small>Active cancer / inflammation</small></span></label>
+      </div>
+    </div>
+
+    <!-- 5. Labs -->
+    <div class="card">
+      <div class="sec-head"><div class="sec-num">5</div><h2>ผลตรวจทางห้องปฏิบัติการ<span class="optional-tag">มีก็กรอก</span></h2></div>
+      <p class="sec-desc">ไม่จำเป็นต้องกรอกครบ — ใส่เฉพาะค่าที่มี ระบบจะแปลผลให้</p>
+      <div class="lab-note">💡 ถ้าไม่มีผล Lab ข้ามส่วนนี้ได้เลย ระบบยังประเมินจากข้อมูลส่วนตัวและโรคประจำตัวได้</div>
+
+      <div class="grid">
+        <label class="fld"><span>ความดัน Systolic (mmHg)</span><input type="number" id="sbp" min="0" placeholder="เช่น 138"></label>
+        <label class="fld"><span>ความดัน Diastolic (mmHg)</span><input type="number" id="dbp" min="0" placeholder="เช่น 86"></label>
+      </div>
+      <div class="grid">
+        <label class="fld"><span>HbA1c (%)</span><input type="number" id="hba1c" step="0.1" placeholder="เช่น 6.2"></label>
+        <label class="fld"><span>Fasting glucose (mg/dL)</span><input type="number" id="fpg" placeholder="เช่น 105"></label>
+      </div>
+      <div class="grid-3">
+        <label class="fld"><span>LDL-C (mg/dL)</span><input type="number" id="ldl" placeholder="เช่น 150"></label>
+        <label class="fld"><span>HDL-C (mg/dL)</span><input type="number" id="hdl" placeholder="เช่น 45"></label>
+        <label class="fld"><span>Triglyceride (mg/dL)</span><input type="number" id="tg" placeholder="เช่น 180"></label>
+      </div>
+      <div class="grid">
+        <label class="fld"><span>eGFR (mL/min/1.73)</span><input type="number" id="egfr" placeholder="เช่น 72"></label>
+        <label class="fld"><span>Urine ACR (mg/g)</span><input type="number" id="acr" placeholder="เช่น 18"></label>
+      </div>
+      <div class="grid-3">
+        <label class="fld"><span>ApoB (mg/dL)</span><input type="number" id="apob" placeholder=""></label>
+        <label class="fld"><span>Lp(a) (nmol/L)</span><input type="number" id="lpa" placeholder=""></label>
+        <label class="fld"><span>hs-CRP (mg/L)</span><input type="number" id="crp" step="0.1" placeholder=""></label>
+      </div>
+      <label class="fld" style="margin-bottom:0"><span>Homocysteine (µmol/L) <span class="hint">เลือก</span></span><input type="number" id="hcy" step="0.1" placeholder=""></label>
+    </div>
+
+    <div class="card consent-card">
+      <div class="chips">
+        <label class="chip">
+          <input type="checkbox" id="consent">
+          <span>ยินยอมให้โรงพยาบาลเก็บและใช้ข้อมูลสุขภาพนี้ เพื่อประเมินความเสี่ยง บันทึกสถิติ และให้เจ้าหน้าที่ติดต่อกลับ ตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA)<small>ไม่ยินยอมก็ประเมินได้ แต่ระบบจะไม่บันทึกข้อมูลและไม่สามารถให้เจ้าหน้าที่ติดต่อกลับได้</small></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn-primary" onclick="assess()">ประเมินความเสี่ยง →</button>
+      <button type="button" class="btn-ghost" onclick="resetForm()">เริ่มใหม่</button>
+    </div>
+  </form>
+
+  <!-- RESULT -->
+  <div id="result"></div>
+
+  <div class="footer-note no-print">
+    อ้างอิงตาม AHA/ASA 2024 Guideline for the Primary Prevention of Stroke · จัดทำสำหรับโปรแกรมตรวจสุขภาพเชิงป้องกัน<br>
+    ผลการประเมินเป็น “แผนที่ความเสี่ยง” ไม่ใช่การวินิจฉัย โปรดปรึกษาแพทย์เพื่อยืนยันและวางแผนการดูแล
+  </div>
+</div>
+
+<script>
+  // ====== CONFIG : แก้ไขข้อมูลโรงพยาบาลตรงนี้ ======
+  const CONFIG = {
+    // วาง URL ของ Web App จาก Apps Script (Deploy > New deployment > Web app)
+    GAS_URL: 'PASTE_YOUR_GAS_WEB_APP_URL_HERE',
+    HOSPITAL_NAME: 'โรงพยาบาลกรุงเทพ สุราษฎร์',
+    PHONE: '077-956-789',                 // เบอร์ที่แสดงบนปุ่ม
+    PHONE_TEL: '077956789',               // เบอร์สำหรับโทร (ตัวเลขล้วน ไม่มีขีด)
+    LINE_URL: 'https://line.me/R/ti/p/@bangkoksurat', // ลิงก์ LINE OA
+  };
+
+  let lastAssessment = {};
+  function postToSheet(payload){
+    if(!CONFIG.GAS_URL || CONFIG.GAS_URL.indexOf('PASTE')===0){
+      console.warn('ยังไม่ได้ตั้งค่า CONFIG.GAS_URL — ข้อมูลจะยังไม่ถูกบันทึก'); return;
+    }
+    fetch(CONFIG.GAS_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    }).catch(e=>console.error('ส่งข้อมูลไม่สำเร็จ:', e));
+  }
+
+  // ---------- auto-resize: รายงานความสูงให้หน้าเว็บแม่ (กรณีฝังด้วย iframe) ----------
+  (function(){
+    function postHeight(){
+      var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      try { parent.postMessage({ type:'bsr-stroke-height', height:h }, '*'); } catch(e){}
+    }
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (window.ResizeObserver) { new ResizeObserver(postHeight).observe(document.body); }
+    else { setInterval(postHeight, 600); }
+  })();
+
+  // ---------- acute symptom live alert ----------
+  document.getElementById('acute').addEventListener('change', function(){
+    document.getElementById('acuteAlert').classList.toggle('show', this.checked);
+  });
+
+  const $ = id => document.getElementById(id);
+  const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? null : v; };
+  const checked = sel => Array.from(document.querySelectorAll(sel+' input:checked')).map(c=>c.value);
+
+  function resetForm(){
+    $('form').reset();
+    document.getElementById('acuteAlert').classList.remove('show');
+    $('result').style.display='none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function ageTier(a){
+    if(a<40) return {key:'18-39', name:'Young Stroke Risk & Lifestyle', base:0};
+    if(a<50) return {key:'40-49', name:'Early Vascular Risk', base:1};
+    if(a<60) return {key:'50-59', name:'Intensive Stroke Prevention', base:1};
+    if(a<70) return {key:'60-69', name:'Advanced Stroke & Brain Health', base:2};
+    return {key:'≥70', name:'Comprehensive Stroke, AF & Brain Frailty', base:2};
+  }
+  const TIERS=['Stroke Screen Basic','Stroke Screen Plus','Stroke Screen Advanced','Stroke Screen Executive / Intensive'];
+
+  function assess(){
+    const age = num('age');
+    if(age===null){ alert('กรุณากรอกอายุก่อนครับ'); $('age').focus(); return; }
+
+    const sex = $('sex').value;
+    const w = num('weight'), h = num('height'), waist = num('waist');
+    const smoke = (document.querySelector('input[name=smoke]:checked')||{}).value;
+    const cond = checked('#cond');
+    const symp = checked('#symp');
+    const spec = checked('#special');
+
+    // labs
+    const L = {
+      sbp:num('sbp'), dbp:num('dbp'), hba1c:num('hba1c'), fpg:num('fpg'),
+      ldl:num('ldl'), hdl:num('hdl'), tg:num('tg'), egfr:num('egfr'),
+      acr:num('acr'), apob:num('apob'), lpa:num('lpa'), crp:num('crp'), hcy:num('hcy')
+    };
+
+    // ---- EMERGENCY override ----
+    if(symp.includes('acute')){ renderEmergency(); return; }
+
+    // ---- BMI ----
+    let bmi=null,bmiCat='';
+    if(w&&h){ bmi = w/Math.pow(h/100,2); 
+      bmiCat = bmi<18.5?'น้ำหนักน้อย':bmi<23?'ปกติ':bmi<25?'ท้วม':bmi<30?'อ้วน':'อ้วนมาก'; }
+    const centralObesity = (waist!==null && ((sex==='male'&&waist>=90)||(sex==='female'&&waist>=80)));
+    const obese = (bmi!==null && bmi>=27.5) || centralObesity;
+
+    // ---- derive flags from labs ----
+    const labHTN = (L.sbp!==null&&L.sbp>=140)||(L.dbp!==null&&L.dbp>=90);
+    const labHTNsevere = (L.sbp!==null&&L.sbp>=160)||(L.dbp!==null&&L.dbp>=100);
+    const labDM = (L.hba1c!==null&&L.hba1c>=6.5)||(L.fpg!==null&&L.fpg>=126);
+    const labPreDM = (L.hba1c!==null&&L.hba1c>=5.7&&L.hba1c<6.5)||(L.fpg!==null&&L.fpg>=100&&L.fpg<126);
+    const labDMsevere = (L.hba1c!==null&&L.hba1c>=9);
+    const labLDLhigh = (L.ldl!==null&&L.ldl>=160)||(L.apob!==null&&L.apob>=110);
+    const labLDLsevere = (L.ldl!==null&&L.ldl>=190);
+    const labCKD = (L.egfr!==null&&L.egfr<60)||(L.acr!==null&&L.acr>=30);
+    const labCKDsevere = (L.egfr!==null&&L.egfr<30);
+    const labLpaHigh = (L.lpa!==null&&L.lpa>=125);   // ~50 mg/dL
+    const labCRPhigh = (L.crp!==null&&L.crp>=2);
+
+    // ---- major risk factor tally ----
+    const major = {};
+    major['ความดันโลหิตสูง'] = cond.includes('htn')||cond.includes('htn_unctrl')||labHTN;
+    major['เบาหวาน/ก่อนเบาหวาน'] = cond.includes('dm')||labDM||labPreDM;
+    major['ไขมันในเลือดสูง'] = cond.includes('lipid')||labLDLhigh||labLpaHigh;
+    major['สูบบุหรี่'] = smoke==='current';
+    major['ภาวะอ้วน/รอบเอวเกิน'] = obese;
+    major['ภาวะหยุดหายใจขณะหลับ (OSA)'] = cond.includes('osa');
+    major['โรคไตเรื้อรัง'] = cond.includes('ckd')||labCKD;
+    major['โรคหลอดเลือดหัวใจ/ขา'] = cond.includes('cadpad');
+    major['ประวัติครอบครัวก่อนวัย'] = cond.includes('famhx');
+    const majorList = Object.keys(major).filter(k=>major[k]);
+    const majorCount = majorList.length;
+
+    // ---- high-risk specific flags ----
+    const hasAF = cond.includes('af');
+    const afSuspicion = symp.includes('palp') && age>=65;
+    const carotidFlag = cond.includes('carotid')||symp.includes('bruit');
+    const neuroFlag = symp.includes('neuro');
+    const cogFlag = symp.includes('cog');
+    const autoThrombosis = (spec.includes('autoimmune')&&spec.includes('thrombosis'))||spec.includes('thrombosis');
+    const cancerThrombosis = spec.includes('cancer')&&spec.includes('thrombosis');
+
+    // ---- RISK CLASSIFICATION ----
+    let level='low', reasons=[];
+    // HIGH
+    const highTriggers=[];
+    if(neuroFlag) highTriggers.push('มีอาการทางระบบประสาท');
+    if(cogFlag) highTriggers.push('ความจำ/การเดินเปลี่ยนแปลง');
+    if(carotidFlag) highTriggers.push('ตรวจพบ/สงสัยโรคหลอดเลือดคอ');
+    if(hasAF) highTriggers.push('หัวใจเต้นผิดจังหวะ (AF)');
+    if(afSuspicion) highTriggers.push('สงสัย AF (ใจสั่น + อายุ ≥65)');
+    if(majorCount>=3) highTriggers.push('ปัจจัยเสี่ยงหลัก ≥3 ข้อ');
+    if(labDMsevere) highTriggers.push('HbA1c ≥9%');
+    if(labCKDsevere) highTriggers.push('eGFR <30');
+    if(labLDLsevere) highTriggers.push('LDL ≥190');
+    if(labHTNsevere&&majorCount>=1) highTriggers.push('ความดันสูงมาก + ปัจจัยเสี่ยงอื่น');
+    if(labLpaHigh&&majorCount>=1) highTriggers.push('Lp(a) สูง + ปัจจัยเสี่ยงอื่น');
+    if(autoThrombosis) highTriggers.push('ภูมิต้านตนเอง/ลิ่มเลือดอุดตัน');
+    if(cancerThrombosis) highTriggers.push('มะเร็ง + ลิ่มเลือดอุดตัน');
+
+    // MODERATE
+    const modTriggers=[];
+    if(majorCount>=1&&majorCount<=2) modTriggers.push(majorCount+' ปัจจัยเสี่ยงหลัก');
+    if(age>=50&&majorCount>=1) modTriggers.push('อายุ ≥50 ร่วมกับปัจจัยเสี่ยง');
+    if(labPreDM) modTriggers.push('ภาวะก่อนเบาหวาน');
+    if(L.ldl!==null&&L.ldl>=130&&L.ldl<160) modTriggers.push('LDL 130-159');
+    if(L.egfr!==null&&L.egfr>=30&&L.egfr<60) modTriggers.push('eGFR 30-59');
+    if(L.acr!==null&&L.acr>=30) modTriggers.push('ไมโครอัลบูมินในปัสสาวะ');
+    if(spec.includes('women_migraine')&&(smoke==='current'||spec.includes('women_meno'))) modTriggers.push('ไมเกรนมีออร่า + ปัจจัยเสี่ยง');
+    if(spec.includes('women_preg')&&majorCount>=1) modTriggers.push('ประวัติครรภ์เสี่ยง + ปัจจัยอื่น');
+    if(labCRPhigh) modTriggers.push('hs-CRP สูง');
+
+    if(highTriggers.length){ level='high'; reasons=highTriggers; }
+    else if(modTriggers.length){ level='mod'; reasons=modTriggers; }
+    else { level='low'; reasons=['ไม่พบปัจจัยเสี่ยงหลักที่สำคัญ']; }
+
+    // ---- PACKAGE tier ----
+    const at = ageTier(age);
+    let tierIdx = at.base;                 // age default minimum
+    if(level==='mod') tierIdx = Math.max(tierIdx,1);
+    if(level==='high') tierIdx = Math.max(tierIdx,2);
+    // Executive if high + clear MRI indication
+    if(level==='high' && (neuroFlag||cogFlag||carotidFlag||labCKDsevere)) tierIdx = 3;
+
+    // ---- IMAGING recommendations ----
+    const imaging=[];
+    const carotidUS = carotidFlag || cond.includes('cadpad') || (cond.includes('dm')&&smoke==='current')
+      || (age>=60&&majorCount>=2) || (age>=50&&level!=='low') || (major['เบาหวาน/ก่อนเบาหวาน']&&smoke==='current');
+    if(carotidUS) imaging.push({t:'Carotid Duplex Ultrasound', why:'ประเมินคราบ/การตีบหลอดเลือดแดงคอ', strong:true});
+    const mri = cogFlag||neuroFlag||labHTNsevere||labDMsevere||tierIdx===3;
+    if(mri) imaging.push({t:'MRI สมอง (DWI/FLAIR/SWI)', why: tierIdx===3&&!(cogFlag||neuroFlag)?'แพ็กเกจ Executive — ทำแบบ shared decision':'มีอาการ/ปัจจัยที่ควรประเมินภาวะ silent infarct / small-vessel disease', strong:true});
+    if(mri && (carotidFlag||neuroFlag)) imaging.push({t:'MRA / CTA หลอดเลือดสมอง-คอ', why:'เมื่อสงสัยการตีบ/ฉีกขาด หรือพบความผิดปกติจาก duplex', strong:false});
+    if(hasAF||afSuspicion||symp.includes('palp')||cond.includes('osa')||(age>=65&&symp.includes('palp'))) {
+      imaging.push({t:'Holter / Patch monitoring + Echocardiography', why:'ตรวจหา/ยืนยันภาวะหัวใจเต้นผิดจังหวะและแหล่งลิ่มเลือดจากหัวใจ', strong:hasAF});
+    }
+    if(!imaging.length) imaging.push({t:'ไม่จำเป็นต้องตรวจภาพ (imaging)', why:'ความเสี่ยงต่ำและไม่มีอาการ — เน้นปรับพฤติกรรมและตรวจซ้ำตามรอบ', strong:false});
+
+    // ---- ACTION PLAN ----
+    const plan=[];
+    if(major['ความดันโลหิตสูง']) plan.push('ควบคุมความดันโลหิตให้ถึงเป้า (โดยทั่วไป <130/80) ปรับยา/พฤติกรรม');
+    if(major['ไขมันในเลือดสูง']||labLDLhigh) plan.push('ประเมินสิทธิ์การใช้ statin และกำหนดเป้า LDL ตามระดับความเสี่ยง');
+    if(major['เบาหวาน/ก่อนเบาหวาน']) plan.push('คุมระดับน้ำตาล/วางแผนควบคุมน้ำหนัก และตรวจติดตาม HbA1c');
+    if(smoke==='current') plan.push('เข้าโปรแกรมเลิกบุหรี่/บุหรี่ไฟฟ้า (ลดความเสี่ยง stroke ชัดเจน)');
+    if(obese) plan.push('วางแผนลดน้ำหนัก/รอบเอว ด้วยอาหารและการออกกำลังกาย');
+    if(cond.includes('osa')) plan.push('ตรวจ/รักษาภาวะหยุดหายใจขณะหลับ (sleep study / CPAP)');
+    if(hasAF||afSuspicion) plan.push('ประเมิน CHA₂DS₂-VASc และพิจารณายาต้านการแข็งตัวของเลือด' + (sex?` (คะแนนเบื้องต้น ≈ ${cha2ds2(age,sex,cond,L,labHTN,labDM)})`:''));
+    if(major['โรคไตเรื้อรัง']||labCKD) plan.push('ดูแลโรคไต ควบคุมความดัน/น้ำตาล และตรวจ urine ACR ซ้ำ');
+    if(spec.includes('autoimmune')||autoThrombosis) plan.push('ส่งตรวจ APS (lupus anticoagulant, anticardiolipin, anti-β2GPI) เมื่อมีข้อบ่งชี้ และทำซ้ำที่ 12 สัปดาห์');
+    plan.push('ปฏิบัติตาม Life’s Essential 8: อาหาร การออกกำลังกาย การนอน คุมน้ำหนัก ไม่สูบบุหรี่ คุมความดัน/น้ำตาล/ไขมัน');
+
+    // ---- FOLLOW-UP ----
+    let followup;
+    if(level==='high') followup='นัดติดตามและทบทวนผลภายใน 3 เดือน สำหรับผลผิดปกติที่ความเสี่ยงสูง';
+    else if(level==='mod') followup='ตรวจซ้ำและประเมินความเสี่ยงทุก 1 ปี';
+    else followup='ตรวจซ้ำและประเมินความเสี่ยงทุก 1–5 ปี (กลุ่มความเสี่ยงต่ำที่คงที่)';
+
+    // ---- top 3 drivers ----
+    let drivers = majorList.slice(0,3);
+    if(!drivers.length) drivers = ['ไม่มีปัจจัยเสี่ยงหลัก — เน้นรักษาสุขภาพดีต่อเนื่อง'];
+
+    // ---- biomarker interpretation ----
+    const bio = labInterpret(L, labHTN, labDM, labPreDM, labLDLhigh, labCKD, obese, bmi, bmiCat);
+
+    // ---- add-on modules ----
+    const addons=[];
+    if(major['ความดันโลหิตสูง']||major['เบาหวาน/ก่อนเบาหวาน']||major['โรคไตเรื้อรัง']||obese) addons.push('HTN / Diabetes / CKD');
+    if(carotidFlag||cond.includes('cadpad')||(age>=60&&majorCount>=2)) addons.push('Carotid Disease');
+    if(hasAF||afSuspicion||cond.includes('osa')||age>=65) addons.push('AF / Cardioembolic');
+    if(sex==='female'&&(spec.includes('women_preg')||spec.includes('women_meno')||spec.includes('women_migraine'))) addons.push('Women-specific Risk');
+    if(spec.includes('autoimmune')||autoThrombosis) addons.push('Autoimmune / Hypercoagulable (APS)');
+    if(spec.includes('cancer')||cancerThrombosis) addons.push('Cancer / Inflammatory');
+
+    // ---- consent + log to Google Sheets ----
+    const assessmentId = 'A' + Date.now();
+    const consent = $('consent').checked;
+    lastAssessment = {assessmentId, level, pkg:TIERS[tierIdx], consent};
+    if(consent){
+      postToSheet({
+        type:'assessment', assessmentId, timestamp:new Date().toISOString(),
+        age, sex, bmi: bmi!==null?bmi.toFixed(1):'', smoke,
+        riskLevel:level, package:TIERS[tierIdx], majorCount,
+        conditions:cond.join(','), symptoms:symp.join(','), special:spec.join(','),
+        labs:JSON.stringify(L), reasons:reasons.join(' | ')
+      });
+    }
+
+    render({level,reasons,drivers,at,tierIdx,imaging,plan,followup,bio,addons,bmi,bmiCat,majorCount,consent});
+  }
+
+  // simplified CHA2DS2-VASc estimate
+  function cha2ds2(age,sex,cond,L,labHTN,labDM){
+    let s=0;
+    if(cond.includes('cadpad')) s++;
+    if(cond.includes('htn')||cond.includes('htn_unctrl')||labHTN) s++;
+    if(age>=75) s+=2; else if(age>=65) s+=1;
+    if(cond.includes('dm')||labDM) s++;
+    if(sex==='female') s++;
+    return s;
+  }
+
+  function labInterpret(L,labHTN,labDM,labPreDM,labLDLhigh,labCKD,obese,bmi,bmiCat){
+    const out=[];
+    if(bmi!==null) out.push({g:'น้ำหนัก', n:`BMI ${bmi.toFixed(1)} (${bmiCat})`, ab:obese});
+    if(L.sbp!==null||L.dbp!==null) out.push({g:'ความดัน', n:`${L.sbp??'-'}/${L.dbp??'-'} mmHg`, ab:labHTN});
+    if(L.hba1c!==null) out.push({g:'น้ำตาล', n:`HbA1c ${L.hba1c}%`, ab:labDM, warn:labPreDM});
+    if(L.fpg!==null) out.push({g:'น้ำตาล', n:`FPG ${L.fpg} mg/dL`, ab:(L.fpg>=126), warn:(L.fpg>=100&&L.fpg<126)});
+    if(L.ldl!==null) out.push({g:'ไขมัน', n:`LDL ${L.ldl} mg/dL`, ab:(L.ldl>=160), warn:(L.ldl>=130&&L.ldl<160)});
+    if(L.hdl!==null) out.push({g:'ไขมัน', n:`HDL ${L.hdl} mg/dL`, ab:(L.hdl<40)});
+    if(L.tg!==null) out.push({g:'ไขมัน', n:`TG ${L.tg} mg/dL`, ab:(L.tg>=200), warn:(L.tg>=150&&L.tg<200)});
+    if(L.apob!==null) out.push({g:'ไขมัน', n:`ApoB ${L.apob} mg/dL`, ab:(L.apob>=110)});
+    if(L.lpa!==null) out.push({g:'ไขมัน', n:`Lp(a) ${L.lpa} nmol/L`, ab:(L.lpa>=125)});
+    if(L.egfr!==null) out.push({g:'ไต', n:`eGFR ${L.egfr}`, ab:(L.egfr<60)});
+    if(L.acr!==null) out.push({g:'ไต', n:`Urine ACR ${L.acr} mg/g`, ab:(L.acr>=30)});
+    if(L.crp!==null) out.push({g:'การอักเสบ', n:`hs-CRP ${L.crp} mg/L`, ab:(L.crp>=2)});
+    if(L.hcy!==null) out.push({g:'อื่นๆ', n:`Homocysteine ${L.hcy} µmol/L`, ab:(L.hcy>15)});
+    return out;
+  }
+
+  function renderEmergency(){
+    const r=$('result');
+    r.innerHTML = `
+      <div class="res-banner emerg">
+        <p class="lvl">Emergency Pathway</p>
+        <p class="lvl-big">⛔ ไปห้องฉุกเฉินทันที</p>
+        <p>มีอาการเฉียบพลัน (FAST) — นี่อาจเป็นโรคหลอดเลือดสมองเฉียบพลัน ทุกนาทีมีความหมายต่อสมอง</p>
+      </div>
+      <div class="card">
+        <div class="res-block">
+          <h3>สิ่งที่ต้องทำตอนนี้</h3>
+          <ul class="clean">
+            <li class="warn"><b>โทร 1669</b> (การแพทย์ฉุกเฉิน) หรือไปห้องฉุกเฉินที่ใกล้ที่สุดทันที</li>
+            <li class="warn">จดเวลาที่เริ่มมีอาการ — สำคัญต่อการให้ยาละลายลิ่มเลือด</li>
+            <li class="warn">งดอาหารและน้ำ และอย่าขับรถเอง</li>
+          </ul>
+        </div>
+        <p class="pt-conc">แบบประเมินนี้สำหรับการ <b>ป้องกัน</b> ไม่ใช่กรณีฉุกเฉิน เมื่อพ้นภาวะฉุกเฉินแล้วจึงค่อยกลับมาประเมินความเสี่ยงเพื่อวางแผนป้องกันต่อไป</p>
+      </div>`;
+    r.style.display='block';
+    r.scrollIntoView({behavior:'smooth'});
+  }
+
+  function render(d){
+    const map={low:{c:'low',t:'ความเสี่ยงต่ำ',e:'LOW RISK'},mod:{c:'mod',t:'ความเสี่ยงปานกลาง',e:'MODERATE RISK'},high:{c:'high',t:'ความเสี่ยงสูง',e:'HIGH RISK'}};
+    const m=map[d.level];
+
+    // ---- contact / appointment CTA ----
+    let contactHTML='';
+    if(d.level==='mod' || d.level==='high'){
+      contactHTML = `
+      <div class="contact-card">
+        <h3>ปรึกษาแพทย์ / นัดหมายตรวจเพิ่มเติม</h3>
+        <p style="opacity:.95;font-size:14px;margin:0">ผลประเมินพบความเสี่ยงที่ควรได้รับการดูแลโดยแพทย์ ${CONFIG.HOSPITAL_NAME} พร้อมให้คำปรึกษาและวางแผนตรวจป้องกัน</p>
+        <div class="contact-btns">
+          <a class="cbtn call" href="tel:${CONFIG.PHONE_TEL}">📞 โทร ${CONFIG.PHONE}</a>
+          <a class="cbtn line" href="${CONFIG.LINE_URL}" target="_blank" rel="noopener">💬 สอบถามผ่าน LINE</a>
+        </div>
+        <div id="cbBox">
+          <p style="font-size:13.5px;opacity:.92;margin:16px 0 6px">หรือฝากข้อมูลให้เจ้าหน้าที่ติดต่อกลับ:</p>
+          <div class="cb-form">
+            <input type="text" id="cbName" placeholder="ชื่อ-สกุล">
+            <input type="tel" id="cbPhone" placeholder="เบอร์โทรศัพท์ *">
+            <select id="cbTime">
+              <option value="">ช่วงเวลาที่สะดวก</option>
+              <option>เช้า (9.00–12.00)</option>
+              <option>บ่าย (13.00–16.00)</option>
+              <option>เย็น (16.00–19.00)</option>
+            </select>
+            <button type="button" class="cbtn call" onclick="submitCallback()">ให้เจ้าหน้าที่ติดต่อกลับ</button>
+          </div>
+          ${d.consent?'':'<p style="font-size:12px;opacity:.85;margin:8px 0 0">* กรุณายินยอม PDPA ในแบบฟอร์มด้านบนก่อน จึงจะฝากข้อมูลให้ติดต่อกลับได้ (ปุ่มโทร/LINE ใช้ได้ทันที)</p>'}
+        </div>
+      </div>`;
+    } else {
+      contactHTML = `<div class="contact-soft">มีคำถามเพิ่มเติม? ติดต่อ ${CONFIG.HOSPITAL_NAME} · โทร <b style="color:var(--teal)">${CONFIG.PHONE}</b> · <a href="${CONFIG.LINE_URL}" target="_blank" rel="noopener" style="color:#06c755;font-weight:600;text-decoration:none">LINE</a></div>`;
+    }
+
+    // group biomarkers
+    let bioHTML='';
+    if(d.bio.length){
+      const groups={};
+      d.bio.forEach(b=>{(groups[b.g]=groups[b.g]||[]).push(b)});
+      bioHTML = Object.keys(groups).map(g=>{
+        const items = groups[g].map(b=>{
+          const tag = b.ab?'<span class="tag a">ผิดปกติ</span>':b.warn?'<span class="tag b">เฝ้าระวัง</span>':'<span class="tag n">ปกติ</span>';
+          const cls = b.ab?'warn':b.warn?'':'ok';
+          return `<li class="${cls}">${b.n}${tag}</li>`;
+        }).join('');
+        return `<div style="margin-bottom:6px"><b style="color:var(--navy);font-size:13px">${g}</b><ul class="clean">${items}</ul></div>`;
+      }).join('');
+    } else {
+      bioHTML='<p class="muted-row">ไม่ได้กรอกผลตรวจ — ประเมินจากข้อมูลส่วนตัวและโรคประจำตัว</p>';
+    }
+
+    const imagingHTML = d.imaging.map(i=>
+      `<li class="${i.strong?'warn':''}"><b>${i.t}</b><br><span class="muted-row">${i.why}</span></li>`).join('');
+
+    const r=$('result');
+    r.innerHTML = `
+      <div class="res-banner ${m.c}">
+        <p class="lvl">${m.e}</p>
+        <p class="lvl-big">${m.t}</p>
+        <p>${d.reasons.join(' · ')}</p>
+        <span class="pkg-pill">📦 แนะนำ: ${TIERS[d.tierIdx]}</span>
+      </div>
+
+      <div class="card">
+        <div class="res-block">
+          <h3>สรุปความเสี่ยง</h3>
+          <p class="muted-row" style="margin:0 0 8px">3 ปัจจัยหลักที่ปรับเปลี่ยนได้:</p>
+          <ul class="clean">${d.drivers.map(x=>`<li><b>${x}</b></li>`).join('')}</ul>
+        </div>
+
+        <div class="res-block">
+          <h3>เส้นทางตามอายุ (Age Pathway)</h3>
+          <ul class="clean">
+            <li>กลุ่มอายุ <b>${d.at.key} ปี</b> — ${d.at.name}</li>
+            <li>ชุดตรวจที่เหมาะสม: <b>${TIERS[d.tierIdx]}</b></li>
+            <li class="${d.imaging[0].t.startsWith('ไม่')?'ok':''}">การตรวจภาพ: ${d.imaging[0].t.startsWith('ไม่')?'<b>ไม่จำเป็น</b>ในขั้นนี้':'<span class="imaging-yes">มีข้อบ่งชี้</span> (ดูรายละเอียดด้านล่าง)'}</li>
+          </ul>
+        </div>
+
+        <div class="res-block">
+          <h3>แปลผลตรวจ (Biomarkers)</h3>
+          ${bioHTML}
+        </div>
+
+        <div class="res-block">
+          <h3>คำแนะนำการตรวจภาพ / หัวใจ</h3>
+          <ul class="clean">${imagingHTML}</ul>
+        </div>
+
+        <div class="res-block">
+          <h3>แผนการดูแล (Action Plan)</h3>
+          <ul class="clean">${d.plan.map(p=>`<li>${p}</li>`).join('')}</ul>
+        </div>
+
+        ${d.addons.length?`<div class="res-block">
+          <h3>โมดูลตรวจเสริมที่แนะนำ</h3>
+          <p style="margin:0">${d.addons.map(a=>`<span class="tag b" style="font-size:12.5px;margin:0 6px 6px 0;display:inline-block">${a}</span>`).join('')}</p>
+        </div>`:''}
+
+        <div class="res-block">
+          <h3>การติดตาม (Follow-up)</h3>
+          <ul class="clean"><li>${d.followup}</li></ul>
+        </div>
+
+        <div class="pt-conc">
+          <b>คำอธิบายสำหรับผู้รับการตรวจ:</b> ผลการประเมินนี้ไม่ใช่การวินิจฉัยว่าเป็นโรคหลอดเลือดสมอง แต่เป็น “แผนที่ป้องกัน” เป้าหมายคือค้นหาภาวะที่รักษาได้ก่อนเกิดโรค ขั้นต่อไปที่สำคัญที่สุดคือปฏิบัติตามแผนป้องกันและตรวจซ้ำตามรอบที่แนะนำ
+        </div>
+      </div>
+
+      ${contactHTML}
+
+      <div class="btn-row no-print">
+        <button type="button" class="btn-primary" onclick="window.print()">🖨️ พิมพ์ / บันทึกเป็น PDF</button>
+        <button type="button" class="btn-ghost" onclick="resetForm()">ประเมินรายใหม่</button>
+      </div>`;
+    r.style.display='block';
+    r.scrollIntoView({behavior:'smooth'});
+  }
+
+  function submitCallback(){
+    const phone = $('cbPhone').value.trim();
+    if(!phone){ alert('กรุณากรอกเบอร์โทรศัพท์ครับ'); $('cbPhone').focus(); return; }
+    if(!lastAssessment.consent){ alert('กรุณายินยอม PDPA ในแบบฟอร์มด้านบนก่อน เพื่อให้เจ้าหน้าที่ติดต่อกลับได้'); return; }
+    postToSheet({
+      type:'callback', assessmentId:lastAssessment.assessmentId, timestamp:new Date().toISOString(),
+      riskLevel:lastAssessment.level, package:lastAssessment.pkg,
+      requestName:$('cbName').value.trim(), requestPhone:phone, requestTime:$('cbTime').value
+    });
+    $('cbBox').innerHTML = '<div class="cb-done">✅ ได้รับข้อมูลแล้ว เจ้าหน้าที่ ' + CONFIG.HOSPITAL_NAME + ' จะติดต่อกลับโดยเร็ว ขอบคุณครับ</div>';
+  }
+</script>
+</body>
+</html>
