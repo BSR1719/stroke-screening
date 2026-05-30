@@ -548,6 +548,78 @@
     document.getElementById('acuteAlert').classList.toggle('show', this.checked);
   });
 
+  // ---------- print report (handles iframe + mobile gracefully) ----------
+  function printReport(){
+    var inIframe = false;
+    try { inIframe = window.self !== window.top; } catch(e) { inIframe = true; }
+
+    // Desktop standalone — direct print works
+    if (!inIframe) { window.print(); return; }
+
+    // In iframe (e.g., embedded in /surat WordPress page) — window.print() may be
+    // blocked by browser, especially in-app browsers (LINE/FB).
+    // Solution: open report-only HTML in new tab and auto-print there.
+    var resultEl = document.getElementById('result');
+    if (!resultEl) { window.print(); return; }
+
+    var styles = '';
+    document.querySelectorAll('style').forEach(function(el){ styles += el.outerHTML; });
+
+    var html = '<!DOCTYPE html><html lang="th"><head><meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>BSR Stroke Report</title>' + styles +
+      '<style>' +
+        'body{margin:18px;background:#fff;font-family:Tahoma,sans-serif}' +
+        '.no-print{display:none !important}' +
+        '#result{display:block !important}' +
+        '.print-header,.print-contact,.print-footer{display:block !important}' +
+        '@media print{body{margin:0}}' +
+        '.tap-print{position:fixed;bottom:14px;left:14px;right:14px;background:#0a2878;color:#fff;' +
+          'padding:14px;border-radius:12px;text-align:center;font-weight:600;font-size:15px;' +
+          'box-shadow:0 6px 16px rgba(0,0,0,.25);cursor:pointer;z-index:9999}' +
+        '@media print{.tap-print{display:none !important}}' +
+      '</style></head><body>' + resultEl.outerHTML +
+      '<div class="tap-print" onclick="window.print()">🖨️ แตะที่นี่เพื่อพิมพ์ / บันทึกเป็น PDF</div>' +
+      '<scr' + 'ipt>setTimeout(function(){try{window.print();}catch(e){}}, 600);</scr' + 'ipt>' +
+      '</body></html>';
+
+    var newWin = window.open('', '_blank');
+    if (!newWin) {
+      alert('เบราว์เซอร์บล็อกการเปิดแท็บใหม่ครับ\n\nวิธีบันทึก:\n1. กดเมนู ⋮ ของเบราว์เซอร์ → "แชร์" หรือ "พิมพ์"\n2. หรือบันทึกภาพหน้าจอ (Screenshot)\n3. หรือเปิดเว็บไซต์ใน Safari/Chrome โดยตรง');
+      return;
+    }
+    try {
+      newWin.document.open();
+      newWin.document.write(html);
+      newWin.document.close();
+    } catch(e) {
+      alert('ไม่สามารถเปิดรายงานในแท็บใหม่ — กรุณาบันทึกภาพหน้าจอ (Screenshot) แทน');
+    }
+  }
+
+  // ---------- share report (Web Share API) ----------
+  function shareReport(){
+    if (navigator.share) {
+      navigator.share({
+        title: 'ผลประเมินความเสี่ยงโรคหลอดเลือดสมอง',
+        text: 'แบบประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง — โรงพยาบาลกรุงเทพ สุราษฎร์',
+        url: window.location.href
+      }).catch(function(){});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(function(){
+        alert('คัดลอกลิงก์แล้ว — สามารถวางใน LINE/email เพื่อแชร์ได้');
+      });
+    }
+  }
+
+  // Show share button if Web Share API is available (mobile mostly)
+  if (navigator.share) {
+    document.addEventListener('DOMContentLoaded', function(){
+      var btn = document.getElementById('shareBtn');
+      if (btn) btn.style.display = 'inline-block';
+    });
+  }
+
   // ---------- lab toggle: show/hide Lab section ----------
   function toggleLab(){
     var el = document.getElementById('labSection');
@@ -1223,7 +1295,8 @@
       ${printFooterHTML}
 
       <div class="btn-row no-print">
-        <button type="button" class="btn-primary" onclick="window.print()">🖨️ พิมพ์ / บันทึกเป็น PDF</button>
+        <button type="button" class="btn-primary" onclick="printReport()">🖨️ พิมพ์ / บันทึกเป็น PDF</button>
+        <button type="button" class="btn-ghost" onclick="shareReport()" style="display:none" id="shareBtn">📤 แชร์</button>
         <button type="button" class="btn-ghost" onclick="resetForm()">ประเมินรายใหม่</button>
       </div>`;
     r.style.display='block';
