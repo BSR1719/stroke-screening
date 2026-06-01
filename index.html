@@ -574,15 +574,29 @@
 
   // ---------- print report (handles iframe + mobile gracefully) ----------
   function printReport(){
+    // Detect mobile — UA-based detection covers iOS Safari, Android Chrome, in-app browsers
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|Mobile|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // MOBILE — direct window.print() works best:
+    //   • iOS Safari → opens share sheet → user can "Save to Files" as PDF
+    //   • Android Chrome → opens print preview → save as PDF
+    //   • Works even inside iframe (WordPress embed, LINE in-app browser)
+    //   • Avoids popup-blocker problem of window.open('_blank') on mobile
+    if (isMobile) {
+      try { window.print(); } catch(e) {
+        alert('ไม่สามารถเปิดหน้าต่างพิมพ์ได้\n\nลองวิธีอื่น:\n• บันทึกภาพหน้าจอ (Screenshot)\n• เปิดในเบราว์เซอร์ Safari/Chrome โดยตรง');
+      }
+      return;
+    }
+
+    // DESKTOP — check iframe context
     var inIframe = false;
     try { inIframe = window.self !== window.top; } catch(e) { inIframe = true; }
 
-    // Desktop standalone — direct print works
+    // Desktop standalone — direct print
     if (!inIframe) { window.print(); return; }
 
-    // In iframe (e.g., embedded in /surat WordPress page) — window.print() may be
-    // blocked by browser, especially in-app browsers (LINE/FB).
-    // Solution: open report-only HTML in new tab and auto-print there.
+    // Desktop in iframe — open clean report in new tab (popup blocker rarely blocks on desktop)
     var resultEl = document.getElementById('result');
     if (!resultEl) { window.print(); return; }
 
@@ -609,7 +623,10 @@
 
     var newWin = window.open('', '_blank');
     if (!newWin) {
-      alert('เบราว์เซอร์บล็อกการเปิดแท็บใหม่ครับ\n\nวิธีบันทึก:\n1. กดเมนู ⋮ ของเบราว์เซอร์ → "แชร์" หรือ "พิมพ์"\n2. หรือบันทึกภาพหน้าจอ (Screenshot)\n3. หรือเปิดเว็บไซต์ใน Safari/Chrome โดยตรง');
+      // Fallback for desktop where popup is blocked — direct print on the iframe content
+      try { window.print(); } catch(e) {
+        alert('กรุณาอนุญาตให้เปิดแท็บใหม่ หรือใช้เมนู Ctrl+P เพื่อพิมพ์');
+      }
       return;
     }
     try {
@@ -617,7 +634,7 @@
       newWin.document.write(html);
       newWin.document.close();
     } catch(e) {
-      alert('ไม่สามารถเปิดรายงานในแท็บใหม่ — กรุณาบันทึกภาพหน้าจอ (Screenshot) แทน');
+      try { window.print(); } catch(_) {}
     }
   }
 
