@@ -203,10 +203,17 @@
   .pdf-rendering .grid,
   .pdf-rendering .grid-3,
   .pdf-rendering .validators-grid{flex-wrap:wrap !important}
-  /* v3.13.2: text-align center on Thai multi-line text causes html2canvas glyph overlap — force left */
+  /* v3.13.3: print-header — stack vertically + release nowrap (fixes right-edge clipping of "วันที่ประเมิน" / "เลขที่รายงาน") */
+  .pdf-rendering .print-header{flex-direction:row !important;flex-wrap:wrap !important;align-items:flex-start !important;gap:14px !important}
+  .pdf-rendering .ph-meta{text-align:left !important;white-space:normal !important;width:auto !important;margin-left:auto}
+  /* v3.13.3: html2canvas Thai glyph overlap — use Tahoma (system Thai font, always loaded) + generous line-height */
   .pdf-rendering .pt-conc,
   .pdf-rendering .print-footer,
-  .pdf-rendering .footer-note{text-align:left !important}
+  .pdf-rendering .footer-note,
+  .pdf-rendering .print-contact{text-align:left !important;font-family:'Tahoma','Sarabun',sans-serif !important;line-height:1.85 !important}
+  .pdf-rendering .pt-conc b,
+  .pdf-rendering .print-footer b,
+  .pdf-rendering .print-contact b{font-weight:700;font-family:inherit !important}
   .pdf-rendering .print-footer{padding:10px 14px}
 
   .btn-primary{flex:1;min-width:200px;background:linear-gradient(135deg,var(--teal),var(--teal-2));
@@ -730,7 +737,12 @@
 
       // Enable PDF rendering mode (shows .no-screen, hides .no-print — same as @media print)
       document.body.classList.add('pdf-rendering');
-      await new Promise(function(r){ setTimeout(r, 150); });
+      // v3.13.3: wait for fonts AND reflow — Thai glyph overlap happens when html2canvas
+      // captures before web fonts (Anuphan/IBM Plex Sans Thai) finish loading
+      if (document.fonts && document.fonts.ready) {
+        try { await document.fonts.ready; } catch(_){}
+      }
+      await new Promise(function(r){ setTimeout(r, 250); });
 
       var element = document.getElementById('result');
       if (!element) throw new Error('ยังไม่มีผลประเมิน — กดประเมินก่อน');
@@ -751,8 +763,10 @@
           width: 780
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-        // v3.13.1: only avoid small blocks. .res-block is too tall (>1 page) and caused blank pages
-        pagebreak: { mode: ['css', 'legacy'], avoid: ['.pkg-card', '.print-contact', '.print-footer', '.res-banner'] }
+        // v3.13.3: removed all avoid rules — they caused huge blank spaces at end of pages
+        // (any block listed in avoid that doesn't fit gets pushed to next page, leaving blanks).
+        // Let CSS handle break hints via .pdf-rendering { break-inside:avoid } rules above.
+        pagebreak: { mode: ['css', 'legacy'] }
       };
 
       var pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
