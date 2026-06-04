@@ -195,6 +195,19 @@
   .pdf-rendering .print-footer{break-inside:avoid;page-break-inside:avoid}
   .pdf-rendering ul.clean li,
   .pdf-rendering .pkg-section{break-inside:avoid;page-break-inside:avoid}
+  /* v3.13.2: lock #result width + force chip rows to wrap (fixes right-edge clipping) */
+  .pdf-rendering #result{max-width:760px !important;width:760px !important;margin:0 auto !important;padding:0 !important}
+  .pdf-rendering .chips,
+  .pdf-rendering .ms-block,
+  .pdf-rendering .ph-meta,
+  .pdf-rendering .grid,
+  .pdf-rendering .grid-3,
+  .pdf-rendering .validators-grid{flex-wrap:wrap !important}
+  /* v3.13.2: text-align center on Thai multi-line text causes html2canvas glyph overlap — force left */
+  .pdf-rendering .pt-conc,
+  .pdf-rendering .print-footer,
+  .pdf-rendering .footer-note{text-align:left !important}
+  .pdf-rendering .print-footer{padding:10px 14px}
 
   .btn-primary{flex:1;min-width:200px;background:linear-gradient(135deg,var(--teal),var(--teal-2));
     color:#fff;padding:15px 20px;box-shadow:0 8px 20px rgba(10,40,120,.28)}
@@ -733,8 +746,9 @@
           backgroundColor: '#ffffff',
           scrollY: 0,
           scrollX: 0,
-          windowWidth: 794,            // A4 width in px at 96dpi — locks layout width
-          windowHeight: document.documentElement.scrollHeight
+          // v3.13.2: match windowWidth to the locked #result width (760px) — prevents right-edge clipping
+          windowWidth: 780,
+          width: 780
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
         // v3.13.1: only avoid small blocks. .res-block is too tall (>1 page) and caused blank pages
