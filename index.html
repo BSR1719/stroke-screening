@@ -617,7 +617,7 @@
     AGE_AF_SUSPICION: 65, AGE_CAROTID_HIGH: 60, AGE_CAROTID_MOD: 50, AGE_MOD_TRIGGER: 50,
   };
 
-  const GUIDELINE_VERSION = 'AHA/ASA 2024 Stroke Prevention + AHA/ACC 2025 Hypertension + 2026 ACC/AHA Dyslipidemia + Neuromed BSR review v3.15';
+  const GUIDELINE_VERSION = 'AHA/ASA 2024 Stroke Prevention + AHA/ACC 2025 Hypertension + 2026 ACC/AHA Dyslipidemia + CYP2C19/NICE 2024 + Neuromed BSR review v3.16';
   const LAST_REVIEW_DATE = '2026-06-12';
 
   const CONFIG = {
@@ -1003,6 +1003,7 @@
   ];
 
   // v3.14: Add-ons (ขายแยกตามดุลยพินิจแพทย์ — แนะนำเฉพาะกลุ่ม)
+  // v3.16: เพิ่ม CYP2C19 genotype สำหรับผู้เคยเป็น stroke/TIA (CHANCE-2 + NICE 2024)
   const ADDONS = {
     aps: {
       label: 'APS Panel (Antiphospholipid Syndrome)',
@@ -1013,6 +1014,11 @@
       label: 'Sleep Study (Polysomnography)',
       items: ['ตรวจการนอนหลับวินิจฉัยภาวะหยุดหายใจขณะหลับ (OSA)'],
       indication: 'คัดกรอง STOP-Bang ≥ 3 (มีความเสี่ยง OSA)'
+    },
+    cyp2c19: {
+      label: 'CYP2C19 Genotype (Pharmacogenomic)',
+      items: ['CYP2C19 *2, *3 (Loss-of-Function alleles) + *17 (Ultrarapid) — ใช้เลือก antiplatelet ที่เหมาะสม'],
+      indication: 'มีประวัติเคยเป็น stroke / TIA — ป้องกัน stroke ซ้ำด้วย antiplatelet ที่เหมาะกับ genotype'
     }
   };
 
@@ -1289,6 +1295,17 @@
         label: ADDONS.sleep.label,
         items: ADDONS.sleep.items,
         reason: `คัดกรอง STOP-Bang ได้ ${stopBangScore}/8 (≥3 = มีความเสี่ยงภาวะหยุดหายใจขณะหลับ)`
+      });
+    }
+    // v3.16: CYP2C19 — สำหรับผู้เคยเป็น stroke/TIA (secondary prevention)
+    // ประชากรไทย ~61% มี LOF alleles (IM/PM) ทำให้ clopidogrel ออกฤทธิ์ไม่เต็มที่
+    // หลักฐาน: CHANCE-2 (NEJM 2021) + NICE 2024 + UK National Stroke Guideline 2025
+    if (cond.includes('prior_stroke')) {
+      recAddons.push({
+        key: 'cyp2c19',
+        label: ADDONS.cyp2c19.label,
+        items: ADDONS.cyp2c19.items,
+        reason: 'มีประวัติ stroke/TIA — ประชากรไทย ~61% มี CYP2C19 LOF alleles (clopidogrel อาจไม่ออกฤทธิ์เต็มที่) → ตรวจช่วยเลือก antiplatelet ที่เหมาะสม (CHANCE-2 2021, NICE 2024)'
       });
     }
 
