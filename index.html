@@ -61,8 +61,10 @@
   header h1{font-family:'Anuphan',sans-serif;font-weight:700;font-size:25px;margin:0 0 6px;line-height:1.25}
   header .sub{opacity:.9;font-size:14px;margin:0;max-width:560px}
   header .guideline-cite{margin:12px 0 0;padding:10px 14px;background:rgba(255,255,255,.13);border-left:3px solid #9bc2ff;
-    border-radius:8px;color:#fff;font-size:12.5px;line-height:1.6;max-width:640px}
+    border-radius:8px;color:#fff;font-size:12.5px;line-height:1.6;max-width:720px}
   header .guideline-cite b{color:#cfe0ff}
+  header .cite-list{margin:6px 0 0;padding-left:22px;color:#fff}
+  header .cite-list li{margin:4px 0;font-size:12px;line-height:1.55}
     /* package detail card */
   .package-detail-block{}
   .pkg-card{background:linear-gradient(135deg,#f8faff,#fff);border:1.5px solid var(--navy);border-radius:14px;padding:16px 18px;margin-top:8px}
@@ -376,7 +378,14 @@
     <span class="badge">Bangkok Hospital Surat · Preventive Health</span>
     <h1>แบบประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง</h1>
     <p class="sub">Intensive Stroke Screening — ประเมินความเสี่ยงตามอายุ ปัจจัยเสี่ยง และผลตรวจ เพื่อแนะนำชุดตรวจและแผนป้องกันที่เหมาะสม</p>
-    <p class="guideline-cite">📖 <b>อ้างอิงเกณฑ์:</b> 2024 Guideline for the Primary Prevention of Stroke: A Guideline From the American Heart Association/American Stroke Association</p>
+    <div class="guideline-cite">
+      📖 <b>อ้างอิงเกณฑ์:</b>
+      <ol class="cite-list">
+        <li>2024 Guideline for the Primary Prevention of Stroke: A Guideline From the American Heart Association/American Stroke Association</li>
+        <li>2025 AHA/ACC/AANP/AAPA/ABC/ACCP/ACPM/AGS/AMA/ASPC/NMA/PCNA/SGIM Guideline for the Prevention, Detection, Evaluation and Management of High Blood Pressure in Adults</li>
+        <li>2026 ACC/AHA/AACVPR/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Dyslipidemia</li>
+      </ol>
+    </div>
     <div class="privacy-block">
       🔒 <b>ความเป็นส่วนตัว:</b> ระบบนี้ <u>ไม่เก็บข้อมูลส่วนตัว</u> (ชื่อ, เบอร์, ผลตรวจรายบุคคล) ทุกอย่างประมวลผลในเบราว์เซอร์ของท่าน<br>
       📊 ระบบเก็บเฉพาะ <b>สถิติรวมที่ไม่ระบุตัวบุคคล</b> (ช่วงอายุ, เพศ, ระดับความเสี่ยง) เพื่อพัฒนาบริการเท่านั้น<br>
@@ -594,8 +603,10 @@
     // เบาหวาน (ADA)
     HBA1C_DM: 6.5, HBA1C_PRE_LOW: 5.7, HBA1C_SEVERE: 9,
     FPG_DM: 126, FPG_PRE_LOW: 100,
-    // ไขมัน (ATP III / AHA-ACC / AHA-ESC)
-    LDL_HIGH: 160, LDL_SEVERE: 190, LDL_BORDERLINE: 130,
+    // ไขมัน (2026 ACC/AHA Dyslipidemia Guideline + AHA/ESC)
+    // 2026 shift: risk-based — LDL 70-189 = primary prevention group, ≥190 = severe (FH)
+    // <70 = treatment goal on statin · <55 = secondary prevention very-high risk
+    LDL_HIGH: 160, LDL_SEVERE: 190, LDL_BORDERLINE: 130, LDL_NEAR_OPTIMAL: 100,
     APOB_HIGH: 110, LPA_HIGH_NMOL: 125,
     HDL_LOW: 40, TG_HIGH: 200, TG_BORDERLINE: 150,
     // ไต (KDIGO)
@@ -606,7 +617,7 @@
     AGE_AF_SUSPICION: 65, AGE_CAROTID_HIGH: 60, AGE_CAROTID_MOD: 50, AGE_MOD_TRIGGER: 50,
   };
 
-  const GUIDELINE_VERSION = 'AHA/ASA 2024 Stroke Prevention + AHA/ACC 2025 Hypertension + Neuromed BSR review v3.14';
+  const GUIDELINE_VERSION = 'AHA/ASA 2024 Stroke Prevention + AHA/ACC 2025 Hypertension + 2026 ACC/AHA Dyslipidemia + Neuromed BSR review v3.15';
   const LAST_REVIEW_DATE = '2026-06-12';
 
   const CONFIG = {
@@ -1179,6 +1190,10 @@
     if(age>=50&&majorCount>=1) modTriggers.push('อายุ ≥50 ร่วมกับปัจจัยเสี่ยง');
     if(labPreDM) modTriggers.push('ภาวะก่อนเบาหวาน');
     if(L.ldl!==null&&L.ldl>=130&&L.ldl<160) modTriggers.push('ไขมันเลว (LDL) ค่อนข้างสูง 130-159');
+    // v3.15: 2026 ACC/AHA Dyslipidemia — LDL 100-129 + ≥1 risk factor = MOD trigger
+    // (เพราะ guideline ใหม่ระบุ "primary prevention LDL 70-189" จัดการตาม risk เป็นหลัก)
+    if(L.ldl!==null&&L.ldl>=100&&L.ldl<130&&(majorCount>=1||cond.includes('famhx')||cond.includes('htn')||cond.includes('dm')||smoke==='current'||age>=50))
+      modTriggers.push('ไขมันเลว (LDL) ใกล้ขอบเขต 100-129 ร่วมกับปัจจัยเสี่ยง (ตาม 2026 guideline)');
     if(L.egfr!==null&&L.egfr>=30&&L.egfr<60) modTriggers.push('การทำงานของไตลดลง (eGFR 30-59)');
     if(L.acr!==null&&L.acr>=30) modTriggers.push('โปรตีนรั่วในปัสสาวะ (Urine ACR)');
     if(spec.includes('women_migraine')&&(smoke==='current'||spec.includes('women_meno'))) modTriggers.push('ไมเกรนมีออร่า + ปัจจัยเสี่ยง');
@@ -1224,7 +1239,9 @@
 
     if(major['ความดันโลหิตสูง']) plan.push('ควบคุมความดันโลหิตให้ถึงเป้า (โดยทั่วไป <130/80) ปรับยา/พฤติกรรม');
     if(hasPriorStroke) plan.push('หลังเป็น stroke/TIA ควรคุมความดันโลหิตให้ <130/80 ต่อเนื่อง และปรึกษาแพทย์เรื่องยาลดความดัน เพื่อลดความเสี่ยงเป็นซ้ำ (AHA/ACC 2025 §5.3.9.3)');
-    if(major['ไขมันในเลือดสูง']||labLDLhigh) plan.push('ปรึกษาแพทย์เรื่องยาลดไขมันในเลือด และตั้งเป้าค่าไขมันเลว (LDL) ที่เหมาะสมกับความเสี่ยง');
+    if(major['ไขมันในเลือดสูง']||labLDLhigh) plan.push('ปรึกษาแพทย์เรื่องยาลดไขมันในเลือด — เป้า LDL ตาม 2026 guideline: <70 ถ้าได้รับ statin · <55 ถ้าเคยเป็น stroke/หัวใจ + ปัจจัยเสี่ยงสูง · <100 ถ้า moderate-intensity statin');
+    // v3.15: 2026 guideline — LDL 100-129 + risk factor (not high enough for "ไขมันสูง" major flag)
+    else if(L.ldl!==null&&L.ldl>=100&&L.ldl<130&&(majorCount>=1||age>=50)) plan.push('LDL อยู่ใกล้ขอบเขต (100-129) ร่วมกับมีปัจจัยเสี่ยง — ตาม 2026 guideline ควรปรึกษาแพทย์เพื่อพิจารณาเริ่มยาหรือปรับพฤติกรรมเข้มข้น');
     if(major['เบาหวาน/ก่อนเบาหวาน']) plan.push('คุมระดับน้ำตาล/วางแผนควบคุมน้ำหนัก และตรวจติดตาม HbA1c');
     if(smoke==='current') plan.push('เข้าโปรแกรมเลิกบุหรี่/บุหรี่ไฟฟ้า (ลดความเสี่ยง stroke ชัดเจน)');
     if(obese) plan.push('วางแผนลดน้ำหนัก/รอบเอว ด้วยอาหารและการออกกำลังกาย');
@@ -1429,7 +1446,7 @@
     if(L.sbp!==null||L.dbp!==null) out.push({g:'ความดัน', n:`${L.sbp??'-'}/${L.dbp??'-'} mmHg`, ab:labHTN, warn:labHTNstage1});
     if(L.hba1c!==null) out.push({g:'น้ำตาล', n:`HbA1c ${L.hba1c}%`, ab:labDM, warn:labPreDM});
     if(L.fpg!==null) out.push({g:'น้ำตาล', n:`FPG ${L.fpg} mg/dL`, ab:(L.fpg>=126), warn:(L.fpg>=100&&L.fpg<126)});
-    if(L.ldl!==null) out.push({g:'ไขมัน', n:`LDL ${L.ldl} mg/dL`, ab:(L.ldl>=160), warn:(L.ldl>=130&&L.ldl<160)});
+    if(L.ldl!==null) out.push({g:'ไขมัน', n:`LDL ${L.ldl} mg/dL`, ab:(L.ldl>=160), warn:(L.ldl>=100&&L.ldl<160)});
     if(L.hdl!==null) out.push({g:'ไขมัน', n:`HDL ${L.hdl} mg/dL`, ab:(L.hdl<40)});
     if(L.tg!==null) out.push({g:'ไขมัน', n:`TG ${L.tg} mg/dL`, ab:(L.tg>=200), warn:(L.tg>=150&&L.tg<200)});
     if(L.apob!==null) out.push({g:'ไขมัน', n:`ApoB ${L.apob} mg/dL`, ab:(L.apob>=110)});
