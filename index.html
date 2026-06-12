@@ -60,6 +60,9 @@
     background:rgba(255,255,255,.16);padding:5px 12px;border-radius:99px;font-weight:600;margin-bottom:12px}
   header h1{font-family:'Anuphan',sans-serif;font-weight:700;font-size:25px;margin:0 0 6px;line-height:1.25}
   header .sub{opacity:.9;font-size:14px;margin:0;max-width:560px}
+  header .guideline-cite{margin:12px 0 0;padding:10px 14px;background:rgba(255,255,255,.13);border-left:3px solid #9bc2ff;
+    border-radius:8px;color:#fff;font-size:12.5px;line-height:1.6;max-width:640px}
+  header .guideline-cite b{color:#cfe0ff}
     /* package detail card */
   .package-detail-block{}
   .pkg-card{background:linear-gradient(135deg,#f8faff,#fff);border:1.5px solid var(--navy);border-radius:14px;padding:16px 18px;margin-top:8px}
@@ -144,6 +147,13 @@
     box-shadow:0 0 0 3px rgba(28,112,128,.12)}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
   .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 12px}
+
+  /* v3.14: input + unit selector (used for waist circumference inch/cm) */
+  .input-with-unit{display:flex;gap:6px;align-items:stretch}
+  .input-with-unit input{flex:1;min-width:0}
+  .unit-select{flex:0 0 auto;width:88px;padding:11px 10px;border:1.5px solid var(--line);
+    border-radius:11px;background:#fbfdfd;font-family:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+  .unit-select:focus{outline:none;border-color:var(--teal-2)}
 
   /* segmented control */
   .seg{display:flex;gap:8px;flex-wrap:wrap}
@@ -366,6 +376,7 @@
     <span class="badge">Bangkok Hospital Surat · Preventive Health</span>
     <h1>แบบประเมินคัดกรองความเสี่ยงโรคหลอดเลือดสมอง</h1>
     <p class="sub">Intensive Stroke Screening — ประเมินความเสี่ยงตามอายุ ปัจจัยเสี่ยง และผลตรวจ เพื่อแนะนำชุดตรวจและแผนป้องกันที่เหมาะสม</p>
+    <p class="guideline-cite">📖 <b>อ้างอิงเกณฑ์:</b> 2024 Guideline for the Primary Prevention of Stroke: A Guideline From the American Heart Association/American Stroke Association</p>
     <div class="privacy-block">
       🔒 <b>ความเป็นส่วนตัว:</b> ระบบนี้ <u>ไม่เก็บข้อมูลส่วนตัว</u> (ชื่อ, เบอร์, ผลตรวจรายบุคคล) ทุกอย่างประมวลผลในเบราว์เซอร์ของท่าน<br>
       📊 ระบบเก็บเฉพาะ <b>สถิติรวมที่ไม่ระบุตัวบุคคล</b> (ช่วงอายุ, เพศ, ระดับความเสี่ยง) เพื่อพัฒนาบริการเท่านั้น<br>
@@ -397,8 +408,14 @@
           <input type="number" id="weight" min="0" step="0.1" placeholder="กก."></label>
         <label class="fld"><span>ส่วนสูง (ซม.)</span>
           <input type="number" id="height" min="0" step="0.1" placeholder="ซม."></label>
-        <label class="fld"><span>รอบเอว (ซม.) <span class="hint">มีก็กรอก</span></span>
-          <input type="number" id="waist" min="0" step="0.1" placeholder="ซม."></label>
+        <label class="fld"><span>รอบเอว <span class="hint">เลือกหน่วยได้ — มีก็กรอก</span></span>
+          <div class="input-with-unit">
+            <input type="number" id="waist" min="0" step="0.1" placeholder="เช่น 32">
+            <select id="waistUnit" class="unit-select" onchange="onWaistUnitChange()">
+              <option value="in" selected>นิ้ว</option>
+              <option value="cm">ซม.</option>
+            </select>
+          </div></label>
       </div>
 
       <label class="fld"><span>การสูบบุหรี่ / บุหรี่ไฟฟ้า</span>
@@ -490,6 +507,18 @@
       </div>
     </div>
 
+    <!-- 7. STOP-Bang screening (v3.14 — physician-requested) -->
+    <div class="card">
+      <div class="sec-head"><div class="sec-num">7</div><h2>คัดกรองภาวะหยุดหายใจขณะหลับ (STOP-Bang)<span class="optional-tag">30 วินาที</span></h2></div>
+      <p class="sec-desc">ตอบเฉพาะข้อที่ตรงกับท่าน (อีก 4 ข้อระบบจะดูจากอายุ/BMI/เพศ/ความดันให้อัตโนมัติ) — รวมคะแนน ≥3 = มีความเสี่ยง OSA</p>
+      <div class="chips" id="stopbang">
+        <label class="chip"><input type="checkbox" value="snore"><span><b>S</b> — นอนกรนเสียงดัง<small>ดังกว่าการพูดคุย / ได้ยินผ่านประตู</small></span></label>
+        <label class="chip"><input type="checkbox" value="tired"><span><b>T</b> — เพลีย/ง่วง/เหนื่อยล้าตอนกลางวัน<small>ทั้งที่นอนพอ</small></span></label>
+        <label class="chip"><input type="checkbox" value="observed"><span><b>O</b> — มีคนเห็นว่าหยุดหายใจขณะหลับ<small>สำลัก/หายใจขัด</small></span></label>
+        <label class="chip"><input type="checkbox" value="neck"><span><b>N</b> — รอบคอ &gt; 40 ซม.<small>ประมาณคืบมือผู้ใหญ่</small></span></label>
+      </div>
+    </div>
+
     <!-- Toggle: do you have other lab results? -->
     <div class="card lab-toggle-card">
       <label class="lab-toggle-label">
@@ -502,9 +531,9 @@
     </div>
 
     <div id="labSection" style="display:none">
-      <!-- 7. Other Labs -->
+      <!-- 8. Other Labs -->
       <div class="card">
-        <div class="sec-head"><div class="sec-num">7</div><h2>ผลตรวจทางห้องปฏิบัติการอื่นๆ<span class="optional-tag">มีก็กรอก</span></h2></div>
+        <div class="sec-head"><div class="sec-num">8</div><h2>ผลตรวจทางห้องปฏิบัติการอื่นๆ<span class="optional-tag">มีก็กรอก</span></h2></div>
         <p class="sec-desc">ไม่จำเป็นต้องกรอกครบ — ใส่เฉพาะค่าที่มี ระบบจะแปลผลให้</p>
       <div class="grid">
         <label class="fld"><span>HbA1c (%) <span class="hint">น้ำตาลสะสม 3 เดือน</span></span><input type="number" id="hba1c" step="0.1" placeholder="เช่น 6.2"></label>
@@ -577,8 +606,8 @@
     AGE_AF_SUSPICION: 65, AGE_CAROTID_HIGH: 60, AGE_CAROTID_MOD: 50, AGE_MOD_TRIGGER: 50,
   };
 
-  const GUIDELINE_VERSION = 'AHA/ASA 2024 Stroke Prevention + AHA/ACC 2025 Hypertension';
-  const LAST_REVIEW_DATE = '2026-05-30';
+  const GUIDELINE_VERSION = 'AHA/ASA 2024 Stroke Prevention + AHA/ACC 2025 Hypertension + Neuromed BSR review v3.14';
+  const LAST_REVIEW_DATE = '2026-06-12';
 
   const CONFIG = {
     // วาง URL ของ Web App จาก Apps Script (Deploy > New deployment > Web app)
@@ -810,6 +839,13 @@
   // (sharePDF button is always visible — works on mobile via Web Share API
   //  and falls back to download on desktop)
 
+  // v3.14: waist unit toggle — swap placeholder hint
+  function onWaistUnitChange(){
+    var sel = document.getElementById('waistUnit');
+    var inp = document.getElementById('waist');
+    if (sel && inp) inp.placeholder = sel.value === 'in' ? 'เช่น 32' : 'เช่น 82';
+  }
+
   // ---------- lab toggle: show/hide Lab section ----------
   function toggleLab(){
     var el = document.getElementById('labSection');
@@ -834,19 +870,21 @@
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
+  // v3.14: 3-tier per Neuromed physician review (Basic / Advanced / Executive)
+  // Plus tier removed — moderate risk now maps to Advanced
   function ageTier(a){
     if(a<40) return {key:'18-39', name:'วัยเริ่มต้น — เน้นปรับพฤติกรรม', base:0};
-    if(a<50) return {key:'40-49', name:'วัยเริ่มเสี่ยงหลอดเลือด', base:1};
-    if(a<60) return {key:'50-59', name:'วัยป้องกันเข้มข้น', base:1};
-    if(a<70) return {key:'60-69', name:'วัยสมอง-หลอดเลือดต้องดูแลใกล้ชิด', base:2};
-    return {key:'≥70', name:'วัยสูงอายุ — สมอง หัวใจ และความเปราะบาง', base:2};
+    if(a<50) return {key:'40-49', name:'วัยเริ่มเสี่ยงหลอดเลือด', base:0};
+    if(a<60) return {key:'50-59', name:'วัยป้องกันเข้มข้น', base:0};
+    if(a<70) return {key:'60-69', name:'วัยสมอง-หลอดเลือดต้องดูแลใกล้ชิด', base:1};
+    return {key:'≥70', name:'วัยสูงอายุ — สมอง หัวใจ และความเปราะบาง', base:1};
   }
-  const TIERS=['แพ็กเกจตรวจคัดกรองพื้นฐาน (Stroke Screen Basic)','แพ็กเกจตรวจคัดกรองเพิ่มเติม (Stroke Screen Plus)','แพ็กเกจตรวจคัดกรองครอบคลุม (Stroke Screen Advanced)','แพ็กเกจตรวจคัดกรองเข้มข้น (Stroke Screen Executive)'];
+  const TIERS=['แพ็กเกจตรวจคัดกรองพื้นฐาน (Stroke Screen Basic)','แพ็กเกจตรวจคัดกรองครอบคลุม (Stroke Screen Advanced)','แพ็กเกจตรวจคัดกรองเข้มข้น (Stroke Screen Executive)'];
 
-  // ===== Package details (อิงตาม BSR PDF + แสดง marker ละเอียดเหมือนใบสั่งตรวจ lab) =====
+  // ===== Package details — v3.14 Neuromed physician review (3-tier, cumulative) =====
   const PACKAGES = [
     { // 0 - Basic
-      bestFit: 'อายุ 18-39 ความเสี่ยงต่ำ / ตรวจประจำปี',
+      bestFit: 'ผู้ใหญ่ทั่วไป (อายุ 18-59) ความเสี่ยงต่ำ / ตรวจสุขภาพประจำปี',
       sections: [
         { h: '🩺 ตรวจร่างกายและประวัติ', items: [
           'ซักประวัติและประเมินปัจจัยเสี่ยงโรคหลอดเลือดสมอง',
@@ -879,16 +917,25 @@
         { h: '❤️ ตรวจหัวใจ', items: [
           'ECG 12-lead (คลื่นไฟฟ้าหัวใจ)'
         ]},
+        { h: '🧮 ประเมินความเสี่ยงด้วย calculator มาตรฐาน', items: [
+          'ASCVD 10-year cardiovascular risk',
+          'PREVENT calculator (AHA 2023)',
+          'Framingham Stroke Risk Profile',
+          'STOP-Bang Questionnaire (คัดกรองภาวะหยุดหายใจขณะหลับ)'
+        ]},
         { h: '📋 รายงานและคำแนะนำ', items: [
           'รายงานสรุปผลพร้อมคำอธิบาย',
           'แผนปรับพฤติกรรมตาม Life’s Essential 8'
+        ]},
+        { h: '📋 แผนป้องกันส่วนตัว', items: [
+          'Personalized prevention plan (แผนป้องกันที่ปรับตามผลตรวจของท่าน)'
         ]}
       ],
-      optionalAddOns: ['hs-CRP', 'ApoB', 'Lp(a)', 'Sleep test (ถ้าเสี่ยง OSA)']
+      optionalAddOns: []
     },
 
-    { // 1 - Plus
-      bestFit: 'อายุ 40-59 หรือมีความเสี่ยงปานกลาง',
+    { // 1 - Advanced (add-on to Basic)
+      bestFit: 'อายุ ≥60 หรือมีปัจจัยเสี่ยงปานกลาง-สูง',
       sections: [
         { h: '💉 Lab ความเสี่ยงหลอดเลือด', items: [
           'hs-CRP (high-sensitivity C-reactive protein) — การอักเสบในเลือด',
@@ -900,59 +947,33 @@
           'TSH (Thyroid Stimulating Hormone)',
           'Free T4'
         ]},
-        { h: '🧮 ประเมินความเสี่ยงด้วย calculator มาตรฐาน', items: [
-          'ASCVD 10-year cardiovascular risk',
-          'PREVENT calculator (AHA 2023)',
-          'Framingham Stroke Risk Profile'
-        ]},
-        { h: '📋 แผนป้องกันส่วนตัว', items: [
-          'Personalized prevention plan (แผนป้องกันที่ปรับตามผลตรวจของท่าน)'
-        ]}
-      ],
-      optionalAddOns: ['Carotid Ultrasound', 'Holter monitoring', 'Echocardiogram (พิจารณาตามความเสี่ยง)']
-    },
-
-    { // 2 - Advanced
-      bestFit: 'อายุ ≥60 หรือมีปัจจัยเสี่ยงหลายข้อ',
-      sections: [
-        { h: '💉 Lab เชิงลึก', items: [
-          'Vitamin B12',
-          'Folate',
-          'Vitamin D 25-OH',
-          'NT-proBNP — marker ภาวะหัวใจล้มเหลว',
-          'PT, PTT, INR — การแข็งตัวของเลือด'
-        ]},
         { h: '🔍 Imaging — หลอดเลือดและหัวใจ', items: [
-          'Carotid Duplex Ultrasound (อัลตราซาวด์หลอดเลือดแดงคอ)',
-          'Echocardiogram (TTE — อัลตราซาวด์หัวใจ)',
-          'Holter monitoring 24–48 ชั่วโมง'
+          'Carotid Duplex Ultrasound (อัลตราซาวด์หลอดเลือดแดงคอ)'
         ]},
         { h: '🧠 ประเมินสมองและการเคลื่อนไหว', items: [
-          'TMSE หรือ MoCA-Thai (ประเมินความจำ)',
-          'Gait & Balance assessment (การเดินและทรงตัว)',
-          'AF risk assessment (ประเมินภาวะหัวใจเต้นผิดจังหวะ)'
+          'TMSE (ประเมินสมองและความจำ)',
+          'Gait & Balance assessment (การเดินและทรงตัว)'
         ]},
         { h: '👥 ทีมเชี่ยวชาญ', items: [
           'พบแพทย์ระบบประสาท (Neurologist)',
           'เภสัชกรทบทวนยาที่กิน (Pharmacist medication review)'
         ]}
       ],
-      optionalAddOns: ['MRI สมอง', 'MRA/CTA หลอดเลือดสมอง-คอ', 'Holter 3-7 วัน']
+      optionalAddOns: []
     },
 
-    { // 3 - Executive
-      bestFit: 'ผู้บริหารความเสี่ยงสูง / ประวัติครอบครัวแรง / ผลตรวจเดิมผิดปกติ',
+    { // 2 - Executive (add-on to Advanced)
+      bestFit: 'ความเสี่ยงสูงมาก + มีปัจจัยเฉพาะ (เคย stroke/TIA, หลอดเลือดคอตีบ, ไตเสื่อมรุนแรง หรืออาการทางระบบประสาท)',
       sections: [
-        { h: '💉 Lab พิเศษ', items: [
-          'APS panel — Lupus anticoagulant',
-          'APS panel — Anti-cardiolipin antibodies',
-          'APS panel — Anti-β2-Glycoprotein I',
-          'hs-Troponin (cardiac marker)',
-          'Coagulation extended (D-dimer, Fibrinogen)'
+        { h: '💉 Lab เชิงลึก', items: [
+          'Vitamin B12',
+          'Folate',
+          'Vitamin D 25-OH'
         ]},
         { h: '🔍 Imaging ระดับเข้มข้น', items: [
-          'MRI สมอง — DWI/FLAIR/SWI/T2 (ตรวจหาจุดสมองขาดเลือดเล็กๆ)',
-          '7-day Patch Monitor (แทน 24-hr Holter — ตรวจ AF ระยะยาว)'
+          'MRI สมองและหลอดเลือดสมอง — DWI/FLAIR/SWI/T2 (ตรวจหาจุดสมองขาดเลือดเล็กๆ)',
+          'Holter monitoring 24–48 ชั่วโมง',
+          'Echocardiogram (TTE — อัลตราซาวด์หัวใจ)'
         ]},
         { h: '🧠 ประเมินสมองครบทุกมิติ', items: [
           'Comprehensive Cognitive Assessment',
@@ -966,9 +987,23 @@
           'ติดตามผล 3 เดือน (3-month prevention follow-up)'
         ]}
       ],
-      optionalAddOns: ['MRA/CTA head-neck', 'Cardiac CT (Calcium Score)', 'Nutrigenomic / Genetic counseling']
+      optionalAddOns: []
     }
   ];
+
+  // v3.14: Add-ons (ขายแยกตามดุลยพินิจแพทย์ — แนะนำเฉพาะกลุ่ม)
+  const ADDONS = {
+    aps: {
+      label: 'APS Panel (Antiphospholipid Syndrome)',
+      items: ['Lupus anticoagulant', 'Anti-cardiolipin antibodies', 'Anti-β2-Glycoprotein I'],
+      indication: 'มีประวัติครอบครัวเป็น stroke / หัวใจก่อนวัย'
+    },
+    sleep: {
+      label: 'Sleep Study (Polysomnography)',
+      items: ['ตรวจการนอนหลับวินิจฉัยภาวะหยุดหายใจขณะหลับ (OSA)'],
+      indication: 'คัดกรอง STOP-Bang ≥ 3 (มีความเสี่ยง OSA)'
+    }
+  };
 
   // Walk up inheritance — combine sections from Basic up to current tier
   function getAllPackageSections(tierIdx) {
@@ -1034,13 +1069,19 @@
     if(age===null){ alert('กรุณากรอกอายุก่อนครับ'); $('age').focus(); return; }
 
     const sex = $('sex').value;
-    const w = num('weight'), h = num('height'), waist = num('waist');
+    const w = num('weight'), h = num('height');
+    // v3.14: waist with unit toggle (default inch) — convert to cm for internal calcs
+    const waistRaw = num('waist');
+    const waistUnit = ($('waistUnit') && $('waistUnit').value) || 'in';
+    const waist = waistRaw === null ? null : (waistUnit === 'in' ? waistRaw * 2.54 : waistRaw);
     const smoke = (document.querySelector('input[name=smoke]:checked')||{}).value;
     const lastCheckup = (document.querySelector('input[name=lastCheckup]:checked')||{}).value || '';
     const cond = checked('#cond');
     const symp = checked('#symp');
     const spec = checked('#special');
     const meds = checked('#meds');
+    // v3.14: STOP-Bang screening — 4 user inputs + 4 auto-derived
+    const sb = checked('#stopbang');
 
     // labs
     const L = {
@@ -1054,10 +1095,21 @@
 
     // ---- BMI ----
     let bmi=null,bmiCat='';
-    if(w&&h){ bmi = w/Math.pow(h/100,2); 
+    if(w&&h){ bmi = w/Math.pow(h/100,2);
       bmiCat = bmi<18.5?'น้ำหนักน้อย':bmi<23?'ปกติ':bmi<25?'ท้วม':bmi<30?'อ้วน':'อ้วนมาก'; }
     const centralObesity = (waist!==null && ((sex==='male'&&waist>=90)||(sex==='female'&&waist>=80)));
     const obese = (bmi!==null && bmi>=27.5) || centralObesity;
+
+    // v3.14: STOP-Bang scoring (must be computed BEFORE plan logic uses it)
+    // 4 user-checked (S,T,O,N) + 4 auto-derived (P=BP/HTN, B=BMI>35, A=Age>50, G=Male)
+    const sb_P = cond.includes('htn') || cond.includes('htn_unctrl') || (L.sbp>=140 || L.dbp>=90);
+    const sb_B = bmi!==null && bmi>=35;
+    const sb_A = age>50;
+    const sb_G = sex==='male';
+    const sbUser = sb.length;
+    const sbAuto = (sb_P?1:0) + (sb_B?1:0) + (sb_A?1:0) + (sb_G?1:0);
+    const stopBangScore = sbUser + sbAuto;
+    const stopBangHighRisk = stopBangScore >= 3;
 
     // ---- derive flags from labs ----
     const labHTN = (L.sbp!==null&&L.sbp>=140)||(L.dbp!==null&&L.dbp>=90);                        // Stage 2 per AHA/ACC 2025
@@ -1137,13 +1189,13 @@
     else if(modTriggers.length){ level='mod'; reasons=modTriggers; }
     else { level='low'; reasons=['ไม่พบปัจจัยเสี่ยงหลักที่สำคัญ']; }
 
-    // ---- PACKAGE tier ----
+    // ---- PACKAGE tier (v3.14: 3-tier — Basic / Advanced / Executive) ----
     const at = ageTier(age);
-    let tierIdx = at.base;                 // age default minimum
-    if(level==='mod') tierIdx = Math.max(tierIdx,1);
-    if(level==='high') tierIdx = Math.max(tierIdx,2);
-    // Executive if high + clear MRI indication
-    if(level==='high' && (neuroFlag||cogFlag||carotidFlag||labCKDsevere||hasPriorStroke)) tierIdx = 3;
+    let tierIdx = at.base;                                       // age default minimum (0 if <60, 1 if ≥60)
+    if(level==='mod') tierIdx = Math.max(tierIdx, 1);            // moderate → Advanced
+    if(level==='high') tierIdx = Math.max(tierIdx, 1);           // high → at least Advanced
+    // Executive: high + critical indication (prior stroke / carotid / neuro / cognitive / severe CKD)
+    if(level==='high' && (neuroFlag||cogFlag||carotidFlag||labCKDsevere||hasPriorStroke)) tierIdx = 2;
 
     // ---- IMAGING recommendations ----
     const imaging=[];
@@ -1151,8 +1203,8 @@
       || (age>=60&&majorCount>=2) || (age>=50&&level!=='low') || (major['เบาหวาน/ก่อนเบาหวาน']&&smoke==='current')
       || hasPriorStroke;
     if(carotidUS) imaging.push({t:'ตรวจอัลตราซาวด์หลอดเลือดแดงที่คอ', why:'ดูคราบไขมันหรือการตีบของหลอดเลือดที่คอ', strong:true});
-    const mri = cogFlag||neuroFlag||labHTNsevere||labDMsevere||tierIdx===3||hasPriorStroke;
-    if(mri) imaging.push({t:'ตรวจ MRI สมอง', why: tierIdx===3&&!(cogFlag||neuroFlag)?'อยู่ในแพ็กเกจระดับสูง — ปรึกษาแพทย์ก่อนตัดสินใจ':'ตรวจหาจุดสมองขาดเลือดขนาดเล็กที่อาจไม่มีอาการ', strong:true});
+    const mri = cogFlag||neuroFlag||labHTNsevere||labDMsevere||tierIdx===2||hasPriorStroke;
+    if(mri) imaging.push({t:'ตรวจ MRI สมอง', why: tierIdx===2&&!(cogFlag||neuroFlag)?'อยู่ในแพ็กเกจระดับสูง — ปรึกษาแพทย์ก่อนตัดสินใจ':'ตรวจหาจุดสมองขาดเลือดขนาดเล็กที่อาจไม่มีอาการ', strong:true});
     if(mri && (carotidFlag||neuroFlag)) imaging.push({t:'ตรวจ MRI/CT หลอดเลือดสมองและคอ', why:'เมื่อสงสัยการตีบหรือฉีกขาดของหลอดเลือด หรือพบความผิดปกติจากอัลตราซาวด์', strong:false});
     if(hasAF||afSuspicion||symp.includes('palp')||cond.includes('osa')||(age>=65&&symp.includes('palp'))) {
       imaging.push({t:'ติดเครื่องตรวจจังหวะหัวใจต่อเนื่อง + อัลตราซาวด์หัวใจ', why:'ตรวจหาภาวะหัวใจเต้นผิดจังหวะและแหล่งลิ่มเลือดจากหัวใจ', strong:hasAF});
@@ -1176,7 +1228,7 @@
     if(major['เบาหวาน/ก่อนเบาหวาน']) plan.push('คุมระดับน้ำตาล/วางแผนควบคุมน้ำหนัก และตรวจติดตาม HbA1c');
     if(smoke==='current') plan.push('เข้าโปรแกรมเลิกบุหรี่/บุหรี่ไฟฟ้า (ลดความเสี่ยง stroke ชัดเจน)');
     if(obese) plan.push('วางแผนลดน้ำหนัก/รอบเอว ด้วยอาหารและการออกกำลังกาย');
-    if(cond.includes('osa')) plan.push('ตรวจ/รักษาภาวะหยุดหายใจขณะหลับ (sleep study / CPAP)');
+    if(cond.includes('osa')||stopBangHighRisk) plan.push(`ตรวจ/รักษาภาวะหยุดหายใจขณะหลับ${stopBangHighRisk?` (STOP-Bang ${stopBangScore}/8 — sleep study แนะนำ)`:' (sleep study / CPAP)'}`);
     if(hasAF||afSuspicion) plan.push('ปรึกษาแพทย์เรื่องยาป้องกันลิ่มเลือด เนื่องจากมีภาวะหัวใจเต้นผิดจังหวะ' + (sex?` (คะแนนความเสี่ยงเบื้องต้น ${cha2ds2(age,sex,cond,L,labHTN,labDM)} — แพทย์จะประเมินซ้ำ)`:''));
     if(major['โรคไตเรื้อรัง']||labCKD) plan.push('ดูแลโรคไต ควบคุมความดัน/น้ำตาล และตรวจ urine ACR ซ้ำ');
     if(spec.includes('autoimmune')||autoThrombosis) plan.push('ตรวจเลือดหาภาวะภูมิคุ้มกันที่ทำให้เลือดแข็งตัวง่าย (APS) และตรวจซ้ำใน 12 สัปดาห์');
@@ -1203,6 +1255,25 @@
     if(sex==='female'&&(spec.includes('women_preg')||spec.includes('women_meno')||spec.includes('women_migraine'))) addons.push('Women-specific Risk');
     if(spec.includes('autoimmune')||autoThrombosis) addons.push('ภูมิต้านตนเอง / ภาวะเลือดแข็งตัวง่าย');
     if(spec.includes('cancer')||cancerThrombosis) addons.push('มะเร็ง / การอักเสบเรื้อรัง');
+
+    // v3.14: Recommended ADD-ONS (sold separately, per physician discretion)
+    const recAddons = [];
+    if (cond.includes('famhx')) {
+      recAddons.push({
+        key: 'aps',
+        label: ADDONS.aps.label,
+        items: ADDONS.aps.items,
+        reason: 'มีประวัติครอบครัวเป็น stroke / หัวใจก่อนวัย — แนะนำตรวจคัดกรอง Antiphospholipid Syndrome'
+      });
+    }
+    if (stopBangHighRisk) {
+      recAddons.push({
+        key: 'sleep',
+        label: ADDONS.sleep.label,
+        items: ADDONS.sleep.items,
+        reason: `คัดกรอง STOP-Bang ได้ ${stopBangScore}/8 (≥3 = มีความเสี่ยงภาวะหยุดหายใจขณะหลับ)`
+      });
+    }
 
     // ---- VALIDATED CALCULATORS (PREVENT + rFSRP) ----
     const onBPmed = meds.includes('on_bp_med');
@@ -1240,8 +1311,9 @@
 
     render({level,reasons,drivers,at,tierIdx,imaging,plan,followup,bio,addons,bmi,bmiCat,majorCount,
       prevent, rfsrp,
+      stopBangScore, stopBangHighRisk, recAddons,
       assessmentId, assessedAt: new Date(),
-      patient: { age, sex, weight:w, height:h, waist, smoke, lastCheckup, cond, symp, spec, meds, L }
+      patient: { age, sex, weight:w, height:h, waist, waistRaw, waistUnit, smoke, lastCheckup, cond, symp, spec, meds, L }
     });
   }
 
@@ -1459,7 +1531,12 @@
     psItems.push(psRow('เพศ', LABELS.sex[p.sex] || '—'));
     if(d.bmi!==null) psItems.push(psRow('BMI', `${d.bmi.toFixed(1)} (${d.bmiCat})`));
     else if(p.weight||p.height) psItems.push(psRow('น้ำหนัก/ส่วนสูง', `${p.weight||'-'} กก. / ${p.height||'-'} ซม.`));
-    if(p.waist!==null && p.waist!==undefined) psItems.push(psRow('รอบเอว', `${p.waist} ซม.`));
+    if(p.waist!==null && p.waist!==undefined) {
+      const waistDisplay = p.waistUnit === 'in'
+        ? `${p.waistRaw} นิ้ว (≈ ${p.waist.toFixed(1)} ซม.)`
+        : `${p.waistRaw} ซม.`;
+      psItems.push(psRow('รอบเอว', waistDisplay));
+    }
     psItems.push(psRow('การสูบบุหรี่', LABELS.smoke[p.smoke] || '—'));
     if (p.lastCheckup) psItems.push(psRow('ตรวจสุขภาพล่าสุด', LABELS.lastCheckup[p.lastCheckup] || '—'));
 
@@ -1605,10 +1682,15 @@
               <ul class="clean pkg-list">${d.imaging.map(i=>`<li class="${i.strong?'warn':''}"><b>${mapImagingToAddOn(i.t)}</b><br><span class="muted-row">${i.why}</span></li>`).join('')}</ul>
             </div>`:''}
 
-            ${PACKAGES[d.tierIdx].optionalAddOns.length?`
+            ${d.recAddons && d.recAddons.length?`
             <div class="pkg-section pkg-optional">
-              <h4>💡 Optional add-ons (พิจารณาตามดุลยพินิจแพทย์):</h4>
-              <p class="pkg-optional-list">${PACKAGES[d.tierIdx].optionalAddOns.join(' · ')}</p>
+              <h4>💡 Add-ons ที่แนะนำสำหรับท่าน (ขายแยก — พิจารณาตามดุลยพินิจแพทย์):</h4>
+              ${d.recAddons.map(a=>`
+              <div style="margin-top:8px;padding:10px 12px;background:#fff7e6;border-left:3px solid #d39a23;border-radius:6px">
+                <div style="font-weight:600;color:var(--navy);font-size:13.5px;margin-bottom:4px">${a.label}</div>
+                <div style="font-size:12.5px;color:var(--muted);margin-bottom:6px">เหตุผล: ${a.reason}</div>
+                <ul class="clean pkg-list" style="margin:0">${a.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+              </div>`).join('')}
             </div>`:''}
 
             <div class="pkg-cta">
